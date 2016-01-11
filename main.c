@@ -1,7 +1,6 @@
 /* wspomaganie organizacji konferencji*/
 #include<stdio.h>
 #include<string.h>
-#include "headers/list.h"
 #include "headers/debug.h" 
 #include "headers/userface.h"
 #define DEBUG 0

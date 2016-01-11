@@ -8,14 +8,16 @@ extern List listofpresentations;
 extern List listofcatalogues; 
 
 int CreateBin(){
-
-	if(filebin = fopen("database.bin","ba")==NULL) return 1;  
+	
+	filebin = fopen("database.bin","ba"); 
+	if(filebin==NULL) return 1;  
 	return 0; 
 }
 
 int CreateRaw() {
 
-	if(fileraw = fopen("database.txt","wa")==NULL) return 1;  
+	fileraw = fopen("database.txt","wa"); 
+	if(fileraw==NULL) return 1;  
 	return 0; 
 }
 
@@ -75,9 +77,9 @@ int SaveRaw(){
 	
 	PrintFileHeader(); 
 	PrintPresenterHeader(fileraw); 
-	PrintPresenterTable(fileraw); 
+	PrintPresenterFile(fileraw); 
 	PrintPresentationHeader(fileraw); 
-	PrintPresentationTable(fileraw);
+	PrintPresentationFile(fileraw);
 	PrintCatHeader(fileraw); 
 	PrintCatTable(fileraw); 
 	return 0; 
@@ -94,13 +96,13 @@ int LoadBin(){
 		if(line[0]=='3'){control= 3;fread((void *)line,sizeof(line),1,filebin);}
 		switch (control){
 			case 1:
-			if(addnode(AddPresenter(line),&listofpresenters))return 1; 
+			if(addnode((void*)AddPresenter(line),&listofpresenters))return 1; 
 			break;
 			case 2:
-			if(addnode(AddPresentation(line),&listofpresentations))return 1; 
+			if(addnode((void*)AddPresentation(line),&listofpresentations))return 1; 
 			break; 
 			case 3:
-			if(addnode(AddCat(line),&listofcatalogues))return 1; 
+			if(addnode((void*)AddCat(line),&listofcatalogues))return 1; 
 			break;
 		}
 		fread((void *)line,sizeof(line),1,filebin);
@@ -157,10 +159,3 @@ void PrintPresenterHeader(FILE * stream){
 void PrintPresentationHeader(FILE * stream){
 	fprintf(stream,"2 Nazwa;Typ;Id prezentera\n"); 
 }
-
-void PrintCatHeader(FILE * stream){
-	fprintf(stream,"3 Nazwa;Typ;Id obiektow...\n"); 
-}
-
-
-

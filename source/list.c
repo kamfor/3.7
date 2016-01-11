@@ -20,6 +20,7 @@ int addnode(void *item, List *anlist){
 		anlist->tail = new;
 		anlist->lenght++;
 	}
+	return 0; 
 }
 
 int delnode(Element *item, List *anlist){
@@ -32,7 +33,7 @@ int delnode(Element *item, List *anlist){
 		anlist->lenght--; 
 		return 0; 
 	}
-	else if(item = anlist->tail){
+	else if(item==anlist->tail){
 		anlist->tail = item->prev; 
 		item->prev->next = NULL; 
 		anlist->lenght--; 
@@ -59,5 +60,6 @@ int dellist(List *anlist){
 	}
 	
 	free(anlist);
+	return 0; 
 }
 

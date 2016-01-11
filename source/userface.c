@@ -5,7 +5,6 @@ extern List listofpresentations;
 
 int Exit(){
 
-	int i;
 	Element * temp; 
 	temp = listofpresenters.head; 
 	while(temp!=NULL){
@@ -25,8 +24,9 @@ int Exit(){
 
 int ReadFromStd(){
 	char line[256]; 
-	fgets(stdin,256, line); 
+	fgets(line,256,stdin); 
 	if(atoi(line)>=0&&atoi(line)<16)return atoi(line); 
+	return 0; 
 }
 
 void Msg(msgtype message, int position){
@@ -110,7 +110,19 @@ void Msg(msgtype message, int position){
 
 	case INPUT_ERR:
 	printf("Blad danych wejsciowych na pozycji %d \n",position); 
+	break;
+	
+	case INIT_ERR:
+	printf("Blad inicjalizacji danych z pliku \n"); 
 	break; 
+
+	case DEL_ERR:
+	printf("Blad usuwania obiektu \n"); 
+	break; 
+	
+	case ADD_ERR: 
+	printf("Blad dodawania elementu do bazy danych\n");
+	break;  
 	}
 }
 

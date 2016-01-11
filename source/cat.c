@@ -1,6 +1,7 @@
 #include "../headers/cat.h"
 
 List listofcatalogues; 
+extern List listofpresenters; 
 
 void PrintCatHeader(FILE *stream){
 	fprintf(stream,"|Nazwa,  Typ, Lista Elementów...|\n"); 
@@ -32,7 +33,8 @@ int PrintCat(Cat *tmp, FILE *stream){
 			temp = temp->next; 
 		}
 	}
-	fprintf(stream,"\n"); 
+	fprintf(stream,"\n");
+	return 1;  
 }
 
 int AddToCat(void *element, Cat *catalogue){
@@ -52,7 +54,7 @@ void PrintCatTable(FILE *stream){
 	}	
 }
 
-List * FindInCats(char * id){
+List *FindInCats(char *id){
 	Element * templ;
 	Element * tempp;  
 	Presenter *this; 
@@ -86,14 +88,16 @@ List * FindInCats(char * id){
 	return NULL; 
 }
 
-Cat * AddCat(char fields[]){
-	Cat * newcat;
-	if(newcat=malloc(sizeof(Cat))==NULL)return NULL;
+Cat *AddCat(char fields[]){
+	Cat *newcat;
 	char dump[] =";"; 
 	char * token; 
 	char stemp[1024]; 
 	int i=1; 
 	int j; 
+	newcat = calloc(1,sizeof(Cat)); 
+	if(newcat==NULL)return NULL;
+
 	
 	strcpy(fields,stemp); 
 	token = strtok(stemp,dump); 
@@ -114,7 +118,7 @@ Cat * AddCat(char fields[]){
 			for(j=0; j<strlen(token); j++){
 				if(!isdigit(token[j])){Msg(INPUT_ERR,i);return NULL;}
 			}
-			if(AddToCat(FindPresenter(token),newcat)){Msg(INPUT_ERR,i);return NULL;};   
+			if(AddToCat(FindPresenter(token,&listofpresenters),newcat)){Msg(INPUT_ERR,i);return NULL;};   
 		}
 		token = strtok(NULL, dump); 
 		i++; 

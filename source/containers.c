@@ -8,12 +8,13 @@ Presentation *tabPn;
 Presenter *AddPresenter(char *fields){
 
 	Presenter *newpresenter;
-	if(newpresenter=malloc(sizeof(Presenter*))==NULL)return NULL; 
 	char dump[] = ";"; 
 	char *token; 
 	char stemp[1024];
 	int i=1; 
-	int j; 
+	int j;
+	newpresenter = calloc(1,sizeof(Presenter)); 
+	if(newpresenter==NULL)return NULL;  
 
 	strcpy(fields,stemp); 
 	token = strtok(stemp,dump); 
@@ -101,12 +102,15 @@ Presentation *AddPresentation(char *fields){
 
 
 	Presentation *newpresentation;
-	if(newpresentation=malloc(sizeof(Presentation))==NULL)return NULL; 
+	Element *myowner; 
 	char dump[] = ";"; 
 	char *token; 
 	char stemp[256]; 
 	int i=1; 
 	int j; 
+	
+	newpresentation = calloc(1,sizeof(Presentation)); 
+	if(newpresentation==NULL)return NULL; 
 
 	strcpy(fields,stemp); 
 	token = strtok(stemp,dump); 
@@ -147,7 +151,8 @@ Presentation *AddPresentation(char *fields){
 					Msg(INPUT_ERR,i); 
 					return NULL; 
 				}
-			newpresentation->owner = FindPresenter(token,&listofpresenters);  
+			myowner = FindPresenter(token,&listofpresenters); 
+			newpresentation->owner = (Presenter*)(myowner->obj); 
 			}
 
 	
@@ -158,7 +163,6 @@ Presentation *AddPresentation(char *fields){
 
 
 	return newpresentation;
-
 }
 
 Element *FindPresenter(char *field, List *anlist){
@@ -178,6 +182,7 @@ Element *FindPresenter(char *field, List *anlist){
 		else return NULL;
 		temp = temp->next; 
 	}
+	return NULL; 
 }
 
 Element * FindPresentation(char *field, List *anlist){
@@ -194,18 +199,21 @@ Element * FindPresentation(char *field, List *anlist){
 		else return NULL;
 		temp = temp->next; 
 	}
+	return NULL; 
 }
 
 int DeletePresenter(Presenter *dead){
 	
-	if(delnode(FindPresenter(dead->pn,&listofpresenters),&listofpresenters))Msg(DEL_ERR,0); 
-	if(delnode(FindPresenter(dead->pn,FindInCats(dead->pn)),FindInCats(dead->pn)))Msg(DEL_ERR,0);
+	if(delnode(FindPresenter(dead->pn,&listofpresenters),&listofpresenters)){Msg(DEL_ERR,0);return 1;} 
+	if(delnode(FindPresenter((dead->pn),((List*)FindInCats(dead->pn))),((List*)FindInCats(dead->pn)))){Msg(DEL_ERR,0);return 1;}
+	return 0; 
 }
 
 int DeletePresentation(Presentation *dead){
 	
-	if(delnode(FindPresentation(dead->pn,&listofpresentations),&listofpresentations))Msg(DEL_ERR,0); 
-	if(delnode(FindPresentation(dead->pn,FindInCats(dead->pn)),FindInCats(dead->pn)))Msg(DEL_ERR,0);
+	if(delnode(FindPresentation(dead->pn,&listofpresentations),&listofpresentations)){Msg(DEL_ERR,0);return 1;} 
+	if(delnode(FindPresentation(dead->pn,FindInCats(dead->pn)),FindInCats(dead->pn))){Msg(DEL_ERR,0);return 1;}
+	return 0; 
 }
 
 
@@ -214,6 +222,7 @@ int UpdatePresenter(Presenter *new){
 	temp = FindPresenter(new->pn,&listofpresenters); 
 
 	temp->obj = new; 
+	return 0; 
 }
 
 int UpdatePresentation(Presentation *new){
@@ -221,6 +230,7 @@ int UpdatePresentation(Presentation *new){
 	temp = FindPresentation(new->pn, &listofpresentations); 
 	
 	temp->obj = new; 
+	return 0;  
 }
 
 
@@ -239,7 +249,7 @@ void PrintPresenterFile(FILE *stream){
 		fprintf(stream,"%s;",this->pn); 
 		for(prestemp = this->presentations.head;prestemp!=NULL;prestemp = prestemp->next){
 			him = (Presentation*)prestemp->obj; 
-			fprintf(stream,"%d;",him->pn); 
+			fprintf(stream,"%s;",him->pn); 
 		}
 		fprintf(stream,"\n"); 
 	}
@@ -250,9 +260,9 @@ void PrintSortedPresenterTable(int sortorder){
 	int *tab;
 	Element  *temp; 
 	tab = malloc(listofpresenters.lenght*sizeof(int)); 
-	tabPn = malloc(listofpresenters.lenght*sizeof(Presenter *));
+	tabPr = malloc(listofpresenters.lenght*sizeof(Presenter));
 	temp = listofpresenters.head; 
-	for(i=0;temp!=NULL;temp=temp->next,tabPr[i]=((Presenter*)(temp->obj)),i++);
+	for(i=0;temp!=NULL;temp=temp->next,tabPr[i]=*(((Presenter*)(temp->obj))),i++);
 	j=i+1; 
 	for(i=0;i<j;tab[i]=i,i++);
 	
@@ -263,10 +273,10 @@ void PrintSortedPresenterTable(int sortorder){
 	if(sortorder==5)qsort(tab,j,sizeof(int),ComparePresenterPayment);
 	if(sortorder==6)qsort(tab,j,sizeof(int),ComparePresenterPresentations);
 	
-	for(i=0;i<j;i++)PrintPresenterLine(tabPr[tab[i]],stdout); 
+	for(i=0;i<j;i++)PrintPresenterLine(&(tabPr[tab[i]]),stdout); 
 }
 
-void PrintPresenterLine(Presenter * any, FILE * stream){
+void PrintPresenterLine(Presenter *any, FILE *stream){
 	
 	int i; 
 	Element *temp;
@@ -294,7 +304,7 @@ void PrintPresentationFile(FILE * stream){
 	for(;temp!=NULL;temp = temp->next){
 		this = (Presentation*)temp->obj;
 		fprintf(stream,"%s;%c;",this->name,this->type); 
-		fprintf(stream,"%d;%d;\n",(this->owner)->pn,this->pn); 
+		fprintf(stream,"%s;%s;\n",(this->owner)->pn,this->pn); 
 	}
 }
 
@@ -302,19 +312,17 @@ void PrintPresentationsTable(int sortorder){
 	int i,j; 
 	int *tab;
 	Element  *temp; 
-
-	
 	tab = malloc(listofpresentations.lenght*sizeof(int)); 
-	tabPn = malloc(listofpresentations.lenght*sizeof(Presentation*));
+	tabPn = malloc(listofpresentations.lenght*sizeof(Presentation));
 	temp = listofpresentations.head; 
-	for(i=0,temp=listofpresentations.head;temp!=NULL;tabPn[i]=(Presenter*)temp->obj,temp=temp->next,i++);
+	for(i=0,temp=listofpresentations.head;temp!=NULL;tabPn[i]=*(((Presentation*)(temp->obj))),temp=temp->next,i++);
 	j = i+1;
 	for(i=0; i<j;tab[i]=i,i++); 
 	
 	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresenterName);
 	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresenterSurname);
 	
-	for(i=0; i<j; i++)PrintPresenterLine(tabPr[tab[i]],stdout); 
+	for(i=0; i<j; i++)PrintPresentationLine(&(tabPn[tab[i]]),stdout); 
 
 }
 
@@ -350,14 +358,18 @@ int ComparePresenterGen (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPr[x].gen,tabPr[y].gen); 
+	if(tabPr[x].gen==tabPr[y].gen)return 0; 
+	else if(tabPr[x].gen>tabPr[y].gen)return 1; 
+	else return -1;  
 }
 
 int ComparePresenterPayment (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPr[x].payment,tabPr[y].payment); 	 
+	if(tabPr[x].payment==tabPr[y].payment)return 0; 
+	else if(tabPr[x].payment>tabPr[y].payment)return 1; 
+	else return -1;  	 
 }
 
 int ComparePresenterPresentations (const void * a, const void * b){
@@ -380,6 +392,8 @@ int ComparePresentationType (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPn[x].type,tabPn[y].type); 
+	if(tabPn[x].type==tabPn[y].type)return 0; 
+	else if(tabPn[x].type>tabPn[y].type)return 1; 
+	else return -1;   
 }
 

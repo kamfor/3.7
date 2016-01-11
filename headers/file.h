@@ -4,10 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#include "containers.h"
 #include "userface.h"
-
-
+#include "containers.h"
+#include "cat.h"
 
 int CreateBin();
 int CreateRaw();
@@ -21,5 +20,4 @@ int CheckPasswd(char*,char*);
 void PrintFileHeader();
 void PrintPresenterHeader(FILE*);
 void PrintPresentationHeader(FILE*);
-void PrintCatHeader(FILE*); 
 #endif

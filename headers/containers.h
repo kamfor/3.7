@@ -4,8 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+
 #include "list.h"
 #include "userface.h"
+#include "cat.h"
 
 typedef struct Presenter { 
 	char name[64]; 

@@ -1,5 +1,5 @@
 compile: main.c source/*
-	gcc -o proj.o main.c source/* -lm 
+	gcc -o proj.o main.c source/* -lm -Wall -pedantic -ansi 
 start: proj.o
 	./proj.o
 debug: proj.o

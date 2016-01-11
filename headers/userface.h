@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-#include "file.h"
-#include "cat.h"
-#include "containers.h"
 
 
 typedef enum msgtype {
@@ -28,8 +25,7 @@ typedef enum msgtype {
 	INPUT_ERR, 
 	INIT_ERR,
 	DEL_ERR,
-	ADD_ERR,
-	
+	ADD_ERR	
 }msgtype;
 
 
