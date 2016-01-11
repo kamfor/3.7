@@ -272,8 +272,8 @@ void PrintSortedPresenterTable(int sortorder){
 	if(sortorder==4)qsort(tab,j,sizeof(int),ComparePresenterGen);
 	if(sortorder==5)qsort(tab,j,sizeof(int),ComparePresenterPayment);
 	if(sortorder==6)qsort(tab,j,sizeof(int),ComparePresenterPresentations);
-	
-	for(i=0;i<j;i++)PrintPresenterLine(&(tabPr[tab[i]]),stdout); 
+	for(i=0;i<j;i++)PrintPresenterLine(&(tabPr[tab[i]]),stdout);
+	free(tab); 
 }
 
 void PrintPresenterLine(Presenter *any, FILE *stream){
@@ -323,6 +323,7 @@ void PrintPresentationsTable(int sortorder){
 	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresenterSurname);
 	
 	for(i=0; i<j; i++)PrintPresentationLine(&(tabPn[tab[i]]),stdout); 
+	free(tab); 
 
 }
 

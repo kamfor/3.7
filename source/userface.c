@@ -2,6 +2,9 @@
 
 extern List listofpresenters; 
 extern List listofpresentations; 
+extern List listofcatalogues; 
+extern Presenter *tabPr; 
+extern Presentation *tabPn; 
 
 int Exit(){
 
@@ -17,7 +20,19 @@ int Exit(){
 	
 		if(delnode(temp,&listofpresentations))return 1;  	
 	}
-	if(dellist(&listofpresentations))return 1; 
+	if(dellist(&listofpresentations))return 1;
+	temp = listofcatalogues.head; 
+	while(temp!=NULL){
+	
+		if(delnode(temp,&listofcatalogues))return 1;  	
+	}
+	if(dellist(&listofcatalogues))return 1;  
+	
+	free(tabPr); 
+	free(tabPn); 
+	
+	SaveBin(); 
+	SaveRaw(); 
 
 	return 0; 	
 }
@@ -123,11 +138,24 @@ void Msg(msgtype message, int position){
 	case ADD_ERR: 
 	printf("Blad dodawania elementu do bazy danych\n");
 	break;  
+	
+	case WELCOME_PROMPT:
+	printf("Nasiśnij dowolny klawisz aby rozpoczac\n"); 
+	break; 
+
+	case BIN_ERR:
+	printf("Blad otwarcia pliku binarnego\n"); 
+	break; 
+
+	case RAW_ERR:
+	printf("Blad otwarcia pliku tekstowego\n"); 
+	break; 
 	}
 }
 
 void DataInit(){
-	/*initialize file */
+	if(OpenBin())Msg(BIN_ERR,0); 
+	if(OpenRaw())Msg(RAW_ERR,0);   
 }
 
 
@@ -135,6 +163,12 @@ void Begin(){
 
 	Msg(CLEAR,0); 
 	Msg(WELCOME,0); 
-
+	Msg(WELCOME_PROMPT,0); 
+	ReadFromStd(); 
+	DataInit();
+	ReadFromStd();  
+	Msg(CLEAR,0); 
+	Msg(MAINMENU,0); 
+	Exit(); 	
 }
 

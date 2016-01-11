@@ -7,12 +7,7 @@
  
 int main(){
 
-	if(DEBUG){
-		Debug(); 
-	}
-	else{
-		Begin(); 
-	}
-	
+	if(DEBUG)Debug();
+	else Begin(); 
 	return 0; 	
 }

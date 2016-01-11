@@ -1,0 +1,6 @@
+#Plik z danymim do programu WSPOMAGANIE ORGANIZACJI KONFERENCJI
+#komentarze rozpoczynaja sie od #
+1 Imie;Nazwisko;Afiliacje;Rodzaj prezentacji;Status platnosci;id prezentacji...
+2 Nazwa;Typ;Id prezentera
+|Nazwa,  Typ, Lista Elementów...|
+|Nazwa,  Typ, Lista Elementów...|

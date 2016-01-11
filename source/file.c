@@ -9,26 +9,26 @@ extern List listofcatalogues;
 
 int CreateBin(){
 	
-	filebin = fopen("database.bin","ba"); 
+	filebin = fopen("database.bin","wb"); 
 	if(filebin==NULL) return 1;  
 	return 0; 
 }
 
 int CreateRaw() {
 
-	fileraw = fopen("database.txt","wa"); 
+	fileraw = fopen("database.txt","w"); 
 	if(fileraw==NULL) return 1;  
 	return 0; 
 }
 
 int OpenBin(){
 	
-	filebin = fopen("database.bin","b"); 
+	filebin = fopen("database.bin","rb+"); 
 	if(filebin == NULL){ 
 		Msg(FILE_OPEN_ERR,0);
 		Msg(CREATE_FILE_PROMPT,0); 
 		if(ReadFromStd() == 1) {
-			if(CreateBin())  Msg(CREATE_FILE_ERR,0);
+			if(CreateBin()){Msg(CREATE_FILE_ERR,0);return 1;}
 			Msg(CREATE_FILE_SUCCES,0); 
 		}
 		else return 1; 
@@ -48,8 +48,8 @@ int OpenRaw(){
 		Msg(FILE_OPEN_ERR,0);
 		Msg(CREATE_FILE_PROMPT,0); 
 		if(ReadFromStd() == 1) {
-			if(CreateRaw()) Msg(CREATE_FILE_SUCCES,0); 
-			else Msg(CREATE_FILE_ERR,0);
+			if(CreateRaw()){Msg(CREATE_FILE_ERR,0);return 1;} 
+			else Msg(CREATE_FILE_SUCCES,0);
 		}
 		else return 1; 
 	}
@@ -68,7 +68,8 @@ int SaveBin(){
 		fgets(line,1024,fileraw);	
 		fwrite((void*)line,sizeof(line),1,filebin); 
 	}
-
+	
+	fclose(filebin); 
 	return 0; 
 
 }
@@ -82,6 +83,7 @@ int SaveRaw(){
 	PrintPresentationFile(fileraw);
 	PrintCatHeader(fileraw); 
 	PrintCatTable(fileraw); 
+	fclose(fileraw); 
 	return 0; 
 }
 

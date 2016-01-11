@@ -53,13 +53,11 @@ int dellist(List *anlist){
 
 	Element *temp = anlist->head; 
 
-	while(temp->next!=NULL){
+	while(temp!=NULL){
 
 		temp = temp->next; 
 		free(temp->prev); 
-	}
-	
-	free(anlist);
+	}	
 	return 0; 
 }
 
