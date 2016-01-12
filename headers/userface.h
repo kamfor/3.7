@@ -29,7 +29,8 @@ typedef enum msgtype {
 	ADD_ERR,
 	WELCOME_PROMPT,
 	BIN_ERR,
-	RAW_ERR 	
+	RAW_ERR,
+	MENU_PROMPT	
 }msgtype;
 
 

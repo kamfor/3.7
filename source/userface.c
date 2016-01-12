@@ -150,6 +150,10 @@ void Msg(msgtype message, int position){
 	case RAW_ERR:
 	printf("Blad otwarcia pliku tekstowego\n"); 
 	break; 
+	
+	case MENU_PROMPT:
+	printf("Wpisz wartość od 0 do 16 i potwierdź klawiszem enter\n"); 
+	break; 
 	}
 }
 
@@ -168,7 +172,14 @@ void Begin(){
 	DataInit();
 	ReadFromStd();  
 	Msg(CLEAR,0); 
-	Msg(MAINMENU,0); 
+	Msg(MAINMENU,0);
+	Msg(MENU_PROMPT,0); 
+	switch (ReadFromStd()){
+	case 1:
+	printf("olololo\n");
+	break;
+	}
+	 
 	Exit(); 	
 }
 
