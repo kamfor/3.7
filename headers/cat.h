@@ -9,16 +9,16 @@
 
 typedef struct Cat{
 	char name[64];
-	char type[32];
-	List listofelements; 
-}Cat; 
+	char type; /*0 -presenters 1-presentations*/
+	List listofelements;
+}Cat;
 
-void PrintCatHeader(FILE*); 
-int PrintCat(Cat*, FILE*); 
-int AddToCat(void*, Cat*); 
-void PrintCatTable(FILE*); 
-List *FindInCats(char*); 
-Cat *AddCat(char*); 
+void PrintCatHeader(FILE*);
+int PrintCat(Cat*, FILE*);
+int AddToCat(void*, Cat*);
+void PrintCatTable(FILE*);
+List *FindInCats(char*);
+Cat *AddCat(char*);
 #endif
 
 
