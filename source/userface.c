@@ -74,17 +74,19 @@ void Msg(msgtype message, int position){
 	printf("--------------------------WSPOMAGANIE ORGANIZACJI KONFERENCJI----------------------------\n");
 	printf("-----------------------------------------------------------------------------------------\n");
 	printf("-Wpisz 1 aby dodac prezentera          - wpisz 8 aby wyswietlic liste prezenterow       -\n");
-	printf("-Wpisz 2 aby dodac prezentacje         - wpisz 9 aby wyswietlic liste prezentacji      -\n");
-	printf("-Wpisz 3 aby usunac prezentera         - wpisz 10 aby wyswietlic liste kat. prezenterow -\n");
-	printf("-Wpisz 4 aby usunac prezentacje        - wpisz 11 aby wyswietlic liste kat.prezentacji -\n");
-	printf("-Wpisz 5 aby dodac katalog               - wpisz 12 aby przejsc do operacji na plikach    -\n");
-	printf("-Wpisz 6 aby edytowac prezentacje      - wpisz 13 aby wyszukac                          -\n");
-	printf("-Wpisz 7 aby edytowac prezentera       - wpisz 0 aby zakonczyc                          -\n");
+	printf("-Wpisz 2 aby dodac prezentacje         - wpisz 9 aby wyswietlic liste prezentacji       -\n");
+	printf("-Wpisz 3 aby usunac prezentera         - wpisz 10 aby wyswietlic liste katalogow        -\n");
+	printf("-Wpisz 4 aby usunac prezentacje        - wpisz 11 aby przejsc do operacji na plikach    -\n");
+	printf("-Wpisz 5 aby dodac katalog             - wpisz 12 aby wyszukac                          -\n");
+	printf("-Wpisz 6 aby edytowac prezentacje      - wpisz 0 aby zakonczyc                          -\n");
+	printf("-Wpisz 7 aby edytowac prezentera                                                        -\n");
 	printf("-----------------------------------------------------------------------------------------\n");
 	break;
 
 	case FILE_MENU:
-	printf("Wpisz komende aby wykonac operacje lub wpisz help aby wyswietlic liste dostepnych komend\n");
+	printf("Wpisz komende aby wykonac operacje\n");
+    printf("Np zapisz/odczytaj nazwapliku.txt\n");
+    printf("Np zapisz/odczytaj nazwapliku.lua haslo\n");
 	break;
 
 	case FILE_OPEN_ERR:
@@ -98,6 +100,9 @@ void Msg(msgtype message, int position){
 	case FILE_READ_ERR:
 	printf("Blad odczytu pliku \n");
 	break;
+
+	case FILE_READ_SUCCES:
+    printf("Pomyslnie odczytano plik \n")
 
 	case CREATE_FILE_PROMPT:
 	printf("Czy chcesz utworzyc plik ? \n");
@@ -145,6 +150,14 @@ void Msg(msgtype message, int position){
 	printf("Blad przy edytowaniu prezentera. \n");
 	break;
 
+    case PRESENTER_PRINT_TABLE:
+    printf("Wpisz porzadek sortowania aby wyswietlic liste prezenterow \n");
+    break;
+
+    case PRESENTER_PRINT_SORTORDER_LIST:
+    printf("1 - wedlug imienia, 2 - wedlug nazwiska, 3 - wedlug afiliacji 4 -wedlug typu , 5 - wedlug platnosci, 0 - aby zakonczyc \n");
+    break;
+
 	case PRESENTATION_ADD:
 	printf("Wpisz w linii NAZWE, TYP(0-plakat 1-ustne) oraz ID prezentera z listy poniżej: \n");
 	printf("Pozycje rodzeiel srednikiem: Np: Swietna prezentacja;0;0234 \n");
@@ -186,6 +199,14 @@ void Msg(msgtype message, int position){
 	printf("Blad przy edytowaniu prezentacji. \n");
 	break;
 
+    case PRESENTATION_PRINT_TABLE:
+    printf("Wpisz porzadek sortowania aby wyswietlic liste prezentacji \n");
+    break;
+
+    case PRESENTATION_PRINT_SORTORDER_LIST:
+    printf("1 - wedlug nazwy, 2 - wedlug typu, 0 - aby zakonczyc\n");
+    break;
+
 	case CAT_ADD:
 	printf("Wpisz nazwę katalogu, jego typ (0 - prezenterzy, 1 - prezentacje),\n");
     printf("oraz numery id prezenterow lub prezentacji z listy powyzej.\n");
@@ -202,6 +223,11 @@ void Msg(msgtype message, int position){
 
     case CAT_ADD_ERR:
 	printf("Bad przy tworzeniu katalogu.\n");
+	break;
+
+    case CAT_PRINT_TABLE:
+	printf("Lista katalogow:\n");
+	printf("Aby zakonczyc wpisz 0.\n");
 	break;
 
 	case INPUT_ERR:
@@ -251,6 +277,10 @@ void Msg(msgtype message, int position){
     case PRES_ADD_ERR:
 	printf("Presentacja o podanym numerze nie istnieje\n");
 	break;
+
+	case: CONTINUE:
+    printf("Aby kontynuowac wpisz 1, aby zakonczyc wpisz 0.\n");
+    break;
 	}
 }
 
@@ -259,6 +289,9 @@ void DataInit(){
 	if(OpenRaw())Msg(RAW_ERR,0);*/
 
 	buffer = malloc(256*sizeof(char));
+	listofpresentations.lenght=0;
+	listofpresenters.lenght=0;
+	listofcatalogues.lenght=0;
 }
 
 void Begin(){
@@ -311,6 +344,31 @@ void Begin(){
             case 7:
                 Msg(CLEAR,0);
                 UserPresentationUpdate();
+            break;
+
+            case 8:
+                Msg(CLEAR,0);
+                UserPresenterPrintTable();
+            break;
+
+            case 9:
+                Msg(CLEAR,0);
+                UserPresentationPrintTable();
+            break;
+
+            case 10:
+                Msg(CLEAR,0);
+                UserPrintCatTable();
+            break;
+
+            case 11:
+                Msg(CLEAR,0);
+                UserFileHandling();
+            break;
+
+            case 12:
+                Msg(CLEAR,0);
+                UserSearch();
             break;
 
 
@@ -400,5 +458,56 @@ void UserPresentationUpdate(){
         else Msg(PRESENTATION_NEXIST,0);
         Msg(PRESENTATION_CHANGE_NEXT,0);
     }while(ReadFromStd());
+}
+
+void UserPresenterPrintTable(){
+    int sortorder;
+    do{
+    	Msg(PRESENTER_PRINT_TABLE,0);
+    	Msg(PRESENTER_PRINT_SORTORDER_LIST,0);
+    	sortorder = ReadFromStd();
+    	PrintSortedPresenterTable(sortorder);
+    }while(sortorder);
+
+}
+void UserPresentationPrintTable(){
+    int sortorder;
+    do{
+    	Msg(PRESENTATION_PRINT_TABLE,0);
+    	Msg(PRESENTATION_PRINT_SORTORDER_LIST,0);
+    	sortorder = ReadFromStd();
+    	PrintSortedPresentationTable(sortorder);
+    }while(sortorder);
+}
+
+void UserPrintCatTable(){
+    do{
+    	Msg(CAT_PRINT_TABLE,0);
+    	PrintCatTable(stdout);
+    }while(ReadFromStd());
+ }
+
+void UserFileHandling(){
+    do{
+        Msg(FILE_MENU,0);
+        switch (CommandParse(ReadData(buffer))){
+        case 1: /*wrong command*/break;
+        case 2: /*file n exist*/ break;
+        case 3: /*blad podczas otwarcia pliku*/break;
+        case 4: /*bledne haslo*/ break;
+        }
+
+    }while(ReadFromStd());
+}
+
+void UserSearch(){
+    do{
+
+
+    }while(ReadFromStd())
+}
+
+int CommandParse(char *input){
+/*siple command interpreter*/
 }
 

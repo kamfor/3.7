@@ -2,8 +2,8 @@
 
 List listofpresenters;
 List listofpresentations;
-Presenter *tabPr;
-Presentation *tabPn;
+Presenter **tabPr;
+Presentation **tabPn;
 int presenterid=1;
 int presentationid=1;
 
@@ -250,10 +250,10 @@ void PrintSortedPresenterTable(int sortorder){
 	int i,j;
 	int *tab;
 	Element  *temp;
-	tab = malloc(listofpresenters.lenght*sizeof(int));
-	tabPr = malloc(listofpresenters.lenght*sizeof(Presenter));
+	tab = calloc(listofpresenters.lenght,sizeof(int));
+	tabPr = calloc(listofpresenters.lenght,sizeof(Presenter*));
 	temp = listofpresenters.head;
-	for(i=0;temp!=NULL;temp=temp->next,tabPr[i]=*(((Presenter*)(temp->obj))),i++);
+	for(i=0;temp!=NULL;temp=temp->next,tabPr[i]=(Presenter*)(temp->obj),i++);
 	j=i+1;
 	for(i=0;i<j;tab[i]=i,i++);
 
@@ -263,7 +263,7 @@ void PrintSortedPresenterTable(int sortorder){
 	if(sortorder==4)qsort(tab,j,sizeof(int),ComparePresenterGen);
 	if(sortorder==5)qsort(tab,j,sizeof(int),ComparePresenterPayment);
 	if(sortorder==6)qsort(tab,j,sizeof(int),ComparePresenterPresentations);
-	for(i=0;i<j;i++)PrintPresenterLine(&(tabPr[tab[i]]),stdout);
+	for(i=0;i<j;i++)PrintPresenterLine(tabPr[tab[i]],stdout);
 	free(tab);
 }
 
@@ -272,18 +272,20 @@ void PrintPresenterLine(Presenter *any, FILE *stream){
 	int i;
 	Element *temp;
 	Presentation *him;
-	temp = any->presentations.head;
 
-	fprintf(stream,"|%4s|%30s|%30s|%40s|",any->pn,any->name,any->surname,any->affiliation);
-	if(any->gen=='0')fprintf(stream,"brak  |");
-	if(any->gen=='1')fprintf(stream,"ustne |");
-	if(any->gen=='2')fprintf(stream,"plakat|");
-	if(any->payment=='0')fprintf(stream,"brak     |");
-	if(any->payment=='1')fprintf(stream,"zaplacono|");
-	for(;temp!=NULL;temp = temp->next){
-		him  = (Presentation*)temp->obj;
-		for(i=0; i<121;i++)fprintf(stream," ");
-		fprintf(stream,"|%20s|\n",him->name);
+	if(any!=NULL){
+        temp = any->presentations.head;
+        fprintf(stream,"|%4s|%30s|%30s|%40s|",any->pn,any->name,any->surname,any->affiliation);
+        if(any->gen=='0')fprintf(stream,"brak  |");
+        if(any->gen=='1')fprintf(stream,"ustne |");
+        if(any->gen=='2')fprintf(stream,"plakat|");
+        if(any->payment=='0')fprintf(stream,"brak     |");
+        if(any->payment=='1')fprintf(stream,"zaplacono|");
+        for(;temp!=NULL;temp = temp->next){
+            him  = (Presentation*)temp->obj;
+            for(i=0; i<121;i++)fprintf(stream," ");
+            fprintf(stream,"|%20s|\n",him->name);
+	    }
 	}
 }
 
@@ -299,29 +301,33 @@ void PrintPresentationFile(FILE * stream){
 	}
 }
 
-void PrintPresentationsTable(int sortorder){
+void PrintSortedPresentationTable(int sortorder){
 	int i,j;
 	int *tab;
 	Element  *temp;
-	tab = malloc(listofpresentations.lenght*sizeof(int));
-	tabPn = malloc(listofpresentations.lenght*sizeof(Presentation));
+	tab = calloc(listofpresentations.lenght,sizeof(int));
+	tabPn = calloc(listofpresentations.lenght,sizeof(Presentation*));
 	temp = listofpresentations.head;
-	for(i=0,temp=listofpresentations.head;temp!=NULL;tabPn[i]=*(((Presentation*)(temp->obj))),temp=temp->next,i++);
+	for(i=0,temp=listofpresentations.head;temp!=NULL;tabPn[i]=(Presentation*)(temp->obj),temp=temp->next,i++);
 	j = i+1;
 	for(i=0; i<j;tab[i]=i,i++);
 
 	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresenterName);
 	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresenterSurname);
 
-	for(i=0; i<j; i++)PrintPresentationLine(&(tabPn[tab[i]]),stdout);
+	for(i=0; i<j; i++)PrintPresentationLine(tabPn[tab[i]],stdout);
 	free(tab);
 }
 
 void PrintPresentationLine(Presentation *any, FILE *stream){
-	fprintf(stream,"%4s|%30s|",any->pn, any->name);
-	if(any->type=='0')fprintf(stream,"ustna |");
-	if(any->type=='1')fprintf(stream,"plakat|");
-	fprintf(stream,"%4s|\n",(any->owner)->pn);
+	if(any!=NULL){
+        fprintf(stream,"%4s|%30s|",any->pn, any->name);
+        if(any->type=='0')fprintf(stream,"ustna |");
+        if(any->type=='1')fprintf(stream,"plakat|");
+        if((Presenter*)(any->owner)!=NULL){
+            fprintf(stream,"%4s|\n",((Presenter*)(any->owner))->pn);
+        }
+	}
 }
 
 void PrintPresenterIdTable(){
@@ -349,29 +355,29 @@ int ComparePresenterName (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPr[x].name,tabPr[y].name);
+	return strcmp(tabPr[x]->name,tabPr[y]->name);
 }
 
 int ComparePresenterSurname (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPr[x].surname,tabPr[y].surname);
+	return strcmp(tabPr[x]->surname,tabPr[y]->surname);
 }
 
 int ComparePresenterAffiliation (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPr[x].affiliation,tabPr[y].affiliation);
+	return strcmp(tabPr[x]->affiliation,tabPr[y]->affiliation);
 }
 
 int ComparePresenterGen (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	if(tabPr[x].gen==tabPr[y].gen)return 0;
-	else if(tabPr[x].gen>tabPr[y].gen)return 1;
+	if(tabPr[x]->gen==tabPr[y]->gen)return 0;
+	else if(tabPr[x]->gen>tabPr[y]->gen)return 1;
 	else return -1;
 }
 
@@ -379,8 +385,8 @@ int ComparePresenterPayment (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	if(tabPr[x].payment==tabPr[y].payment)return 0;
-	else if(tabPr[x].payment>tabPr[y].payment)return 1;
+	if(tabPr[x]->payment==tabPr[y]->payment)return 0;
+	else if(tabPr[x]->payment>tabPr[y]->payment)return 1;
 	else return -1;
 }
 
@@ -388,8 +394,8 @@ int ComparePresenterPresentations (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	if(tabPr[x].presentations.lenght>tabPr[y].presentations.lenght) return 1;
-	else if (tabPr[x].presentations.lenght==tabPr[y].presentations.lenght) return 0;
+	if(tabPr[x]->presentations.lenght>tabPr[y]->presentations.lenght) return 1;
+	else if (tabPr[x]->presentations.lenght==tabPr[y]->presentations.lenght) return 0;
 	else return 0;
 }
 
@@ -397,15 +403,15 @@ int ComparePresentationName (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	return strcmp(tabPn[x].name,tabPn[y].name);
+	return strcmp(tabPn[x]->name,tabPn[y]->name);
 }
 
 int ComparePresentationType (const void * a, const void * b){
 
 	int x = *(int*)a;
 	int y = *(int*)b;
-	if(tabPn[x].type==tabPn[y].type)return 0;
-	else if(tabPn[x].type>tabPn[y].type)return 1;
+	if(tabPn[x]->type==tabPn[y]->type)return 0;
+	else if(tabPn[x]->type>tabPn[y]->type)return 1;
 	else return -1;
 }
 
