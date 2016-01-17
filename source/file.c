@@ -1,90 +1,90 @@
-#include "../headers/file.h" 
+#include "../headers/file.h"
 
-FILE *fileraw; 
-FILE *filebin; 
+FILE *fileraw;
+FILE *filebin;
 
-extern List listofpresenters; 
-extern List listofpresentations; 
-extern List listofcatalogues; 
+extern List listofpresenters;
+extern List listofpresentations;
+extern List listofcatalogues;
 
 int CreateBin(){
-	
-	filebin = fopen("database.bin","wb"); 
-	if(filebin==NULL) return 1;  
-	return 0; 
+
+	filebin = fopen("database.bin","wb");
+	if(filebin==NULL) return 1;
+	return 0;
 }
 
 int CreateRaw() {
 
-	fileraw = fopen("database.txt","w"); 
-	if(fileraw==NULL) return 1;  
-	return 0; 
+	fileraw = fopen("database.txt","w");
+	if(fileraw==NULL) return 1;
+	return 0;
 }
 
 int OpenBin(){
-	
-	filebin = fopen("database.bin","rb+"); 
-	if(filebin == NULL){ 
+
+	filebin = fopen("database.bin","rb+");
+	if(filebin == NULL){
 		Msg(FILE_OPEN_ERR,0);
-		Msg(CREATE_FILE_PROMPT,0); 
+		Msg(CREATE_FILE_PROMPT,0);
 		if(ReadFromStd() == 1) {
 			if(CreateBin()){Msg(CREATE_FILE_ERR,0);return 1;}
-			Msg(CREATE_FILE_SUCCES,0); 
+			Msg(CREATE_FILE_SUCCES,0);
 		}
-		else return 1; 
+		else return 1;
 	}
 	else{
 		Msg(FILE_OPEN_SUCCES,0);
 	}
-	 
-	return 0; 
+
+	return 0;
 
 }
 
 int OpenRaw(){
 
-	fileraw = fopen("database.txt","r+"); 
-	if(fileraw == NULL){ 
+	fileraw = fopen("database.txt","r+");
+	if(fileraw == NULL){
 		Msg(FILE_OPEN_ERR,0);
-		Msg(CREATE_FILE_PROMPT,0); 
+		Msg(CREATE_FILE_PROMPT,0);
 		if(ReadFromStd() == 1) {
-			if(CreateRaw()){Msg(CREATE_FILE_ERR,0);return 1;} 
+			if(CreateRaw()){Msg(CREATE_FILE_ERR,0);return 1;}
 			else Msg(CREATE_FILE_SUCCES,0);
 		}
-		else return 1; 
+		else return 1;
 	}
 	else{
 		Msg(FILE_OPEN_SUCCES,0);
 	}
-	 
+
 	return 0;
 
 }
 
 int SaveBin(){
-	char line[1024]; 
-	rewind(fileraw); 
+	char line[1024];
+	rewind(fileraw);
 	while(!feof(fileraw)){
-		fgets(line,1024,fileraw);	
-		fwrite((void*)line,sizeof(line),1,filebin); 
+		fgets(line,1024,fileraw);
+		fwrite((void*)line,sizeof(line),1,filebin);
 	}
-	
-	fclose(filebin); 
-	return 0; 
+
+	fclose(filebin);
+	return 0;
 
 }
 
 int SaveRaw(){
-	
-	PrintFileHeader(); 
-	PrintPresenterHeader(fileraw); 
-	PrintPresenterFile(fileraw); 
-	PrintPresentationHeader(fileraw); 
+
+	PrintFileHeader();
+	PrintPresenterHeader(fileraw);
+	PrintPresenterFile(fileraw);
+	PrintPresentationHeader(fileraw);
 	PrintPresentationFile(fileraw);
-	PrintCatHeader(fileraw); 
-	PrintCatTable(fileraw); 
-	fclose(fileraw); 
-	return 0; 
+	PrintCatHeader(fileraw);
+	PrintCatTable(fileraw);
+	fclose(fileraw);
+	return 0;
 }
 
 int LoadBin(){
@@ -98,13 +98,13 @@ int LoadBin(){
 		if(line[0]=='3'){control= 3;fread((void *)line,sizeof(line),1,filebin);}
 		switch (control){
 			case 1:
-			if(addnode((void*)AddPresenter(line),&listofpresenters))return 1; 
+			if(addnode((void*)AddPresenter(line),&listofpresenters))return 1;
 			break;
 			case 2:
-			if(addnode((void*)AddPresentation(line),&listofpresentations))return 1; 
-			break; 
+			if(addnode((void*)AddPresentation(line),&listofpresentations))return 1;
+			break;
 			case 3:
-			if(addnode((void*)AddCat(line),&listofcatalogues))return 1; 
+			if(addnode((void*)AddCat(line),&listofcatalogues))return 1;
 			break;
 		}
 		fread((void *)line,sizeof(line),1,filebin);
@@ -125,13 +125,13 @@ int LoadRaw(){
 
 			switch (control){
 				case 1:
-				if(addnode(AddPresenter(line),&listofpresenters))return 1; 
+				if(addnode(AddPresenter(line),&listofpresenters))return 1;
 				break;
 				case 2:
-				if(addnode(AddPresentation(line),&listofpresentations))return 1; 
-				break; 
+				if(addnode(AddPresentation(line),&listofpresentations))return 1;
+				break;
 				case 3:
-				if(addnode(AddCat(line),&listofcatalogues))return 1; 
+				if(addnode(AddCat(line),&listofcatalogues))return 1;
 				break;
 			}
 		}
@@ -139,25 +139,18 @@ int LoadRaw(){
 	}
 
 
-	return 0; 
-}
-
-int CheckPasswd(char * pass, char * rpass){
- 
-	/*create hash from pass*/
-	if(strcmp(pass,rpass)) return 0; 
-	return 1; 
+	return 0;
 }
 
 void PrintFileHeader(){
-	fprintf(fileraw,"#Plik z danymim do programu WSPOMAGANIE ORGANIZACJI KONFERENCJI\n"); 
-	fprintf(fileraw,"#komentarze rozpoczynaja sie od #\n"); 
+	fprintf(fileraw,"#Plik z danymim do programu WSPOMAGANIE ORGANIZACJI KONFERENCJI\n");
+	fprintf(fileraw,"#komentarze rozpoczynaja sie od #\n");
 }
 
 void PrintPresenterHeader(FILE * stream){
-	fprintf(stream,"1 Imie;Nazwisko;Afiliacje;Rodzaj prezentacji;Status platnosci;id prezentacji...\n"); 
+	fprintf(stream,"1 Imie;Nazwisko;Afiliacje;Rodzaj prezentacji;Status platnosci;id prezentacji...\n");
 }
 
 void PrintPresentationHeader(FILE * stream){
-	fprintf(stream,"2 Nazwa;Typ;Id prezentera\n"); 
+	fprintf(stream,"2 Nazwa;Typ;Id prezentera\n");
 }

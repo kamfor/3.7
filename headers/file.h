@@ -16,7 +16,6 @@ int SaveBin();
 int SaveRaw();
 int LoadBin();
 int LoadRaw();
-int CheckPasswd(char*,char*);
 void PrintFileHeader();
 void PrintPresenterHeader(FILE*);
 void PrintPresentationHeader(FILE*);

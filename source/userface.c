@@ -5,7 +5,10 @@ extern List listofpresentations;
 extern List listofcatalogues;
 extern Presenter *tabPr;
 extern Presentation *tabPn;
-char * buffer;
+char *buffer;
+char *binfilemane;
+char *txtfilename;
+char *passwd;
 
 int Exit(){
 
@@ -34,6 +37,10 @@ int Exit(){
 
 	free(tabPr);
 	free(tabPn);
+	free(buffer);
+	free(txtfilename);
+	free(binfilemane);
+	free(passwd);
 
 	/*SaveBin();
 	SaveRaw(); */
@@ -310,6 +317,9 @@ void DataInit(){
 	if(OpenRaw())Msg(RAW_ERR,0);*/
 
 	buffer = malloc(256*sizeof(char));
+	binfilemane = malloc(128*sizeof(char));
+	txtfilename = malloc(128*sizeof(char));
+	passwd = malloc(128*sizeof(char));
 	listofpresentations.lenght=0;
 	listofpresenters.lenght=0;
 	listofcatalogues.lenght=0;
@@ -543,7 +553,51 @@ void UserSearch(){
 }
 
 int CommandParse(char *input){
-/*siple command interpreter*/
+    char dump[] = " ";
+    char filedump[] = ".";
+	char *token;
+	char *filetoken;
+	char stemp[1024];
+	char filestemp[128];
+	char temptxtfilename[128];
+	char tempbinfilemane[128];
+	char temppasswd[128];
+	int i=1;
+	int result=0;
+
+	strcpy(stemp,input);
+	token = strtok(stemp,dump);
+	while(token != NULL){
+		if(i==1){
+            if(strcmp(token,"zapisz")==0)result = 1;
+            else if(strcmp(token,"odczytaj")==0)result = 2;
+            else {Msg(INPUT_ERR,i); return 0;}
+        }
+		if(i==2){
+            if(strcmp(token,"plik.txt")==0)result += 4;
+            else if(strcmp(token,"plik.ula")==0)result += 8;
+            else {Msg(INPUT_ERR,i); return 0;}
+
+            strcpy(filestemp,token);
+            filetoken = strtok(filestemp,filedump);
+            while(filetoken!=NULL){
+                if(strcmp(filetoken,"txt")==0)result += 16;
+                else if(strcmp(filetoken,"ula")==0)result += 32;
+                filetoken = strtok(NULL,filedump);
+            }
+            if(result==0){Msg(INPUT_ERR,i); return 0;}
+            else if(result<32)strcpy(temptxtfilename,token);
+            else if (result>32)strcpy(tempbinfilemane,token);
+            else return 0;
+		}
+		if(i==3){
+            strcpy(temppasswd,token);
+		}
+		token = strtok(NULL, dump);
+		i++;
+	}
+
+	/*add option recognizion*/
 return 0;
 }
 
