@@ -102,7 +102,8 @@ void Msg(msgtype message, int position){
 	break;
 
 	case FILE_READ_SUCCES:
-    printf("Pomyslnie odczytano plik \n")
+    printf("Pomyslnie odczytano plik \n");
+    break;
 
 	case CREATE_FILE_PROMPT:
 	printf("Czy chcesz utworzyc plik ? \n");
@@ -278,7 +279,27 @@ void Msg(msgtype message, int position){
 	printf("Presentacja o podanym numerze nie istnieje\n");
 	break;
 
-	case: CONTINUE:
+	case SEARCH:
+    printf("wpisz 0 aby wyszukac prezentacje lub 1 aby wyszukac prezentera\n");
+    break;
+
+    case SEARCH_NEXT:
+    printf("Aby wyszukac nastepny rekord wpisz 1 aby zakonczyc wpisz 0\n");
+    break;
+
+    case SEARCH_ERR:
+    printf("Blad przy wyszukiwniu brak rekordu w bazie\n");
+    break;
+
+    case SEARCH_PRESENTER:
+    printf("Wpisz ciag znakow zawierajacy jeden z elementów rekordu np imie.\n");
+    break;
+
+    case SEARCH_PRESENTATION:
+    printf("Wpisz jeden z elementow rekordu np nazwe\n");
+    break;
+
+	case CONTINUE:
     printf("Aby kontynuowac wpisz 1, aby zakonczyc wpisz 0.\n");
     break;
 	}
@@ -501,13 +522,28 @@ void UserFileHandling(){
 }
 
 void UserSearch(){
+    Presenter *temp;
+    Presentation *ptemp;
     do{
-
-
-    }while(ReadFromStd())
+        Msg(SEARCH,0);
+        if(ReadFromStd()){
+            Msg(SEARCH_PRESENTER,0);
+            temp = (Presenter*)(FindPresenter(ReadData(buffer),&listofpresenters))->obj;
+            if(temp==NULL)Msg(SEARCH_ERR,0);
+            else PrintPresenterLine(temp,stdout);
+        }
+        else{
+            Msg(SEARCH_PRESENTATION,0);
+            ptemp = (Presentation*)(FindPresentation(ReadData(buffer),&listofpresentations))->obj;
+            if(ptemp==NULL)Msg(SEARCH_ERR,0);
+            else PrintPresentationLine(ptemp,stdout);
+        }
+        Msg(SEARCH_NEXT,0);
+    }while(ReadFromStd());
 }
 
 int CommandParse(char *input){
 /*siple command interpreter*/
+return 0;
 }
 

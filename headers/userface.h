@@ -61,6 +61,8 @@ typedef enum msgtype {
 	SEARCH,
 	SEARCH_ERR,
 	SEARCH_NEXT,
+	SEARCH_PRESENTER,
+	SEARCH_PRESENTATION,
 	CONTINUE
 }msgtype;
 
