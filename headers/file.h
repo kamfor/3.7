@@ -8,15 +8,15 @@
 #include "containers.h"
 #include "cat.h"
 
-int CreateBin();
-int CreateRaw();
-int OpenBin();
-int OpenRaw();
-int SaveBin();
-int SaveRaw();
-int LoadBin();
-int LoadRaw();
-void PrintFileHeader();
+FILE *CreateBin(char*,FILE*);
+int CreateRaw(char*,FILE*);
+int OpenBin(char*,FILE*);
+int OpenRaw(char*,FILE*);
+int SaveBin(char*,FILE*);
+int SaveRaw(FILE*);
+int LoadBin(char*,FILE*);
+int LoadRaw(FILE*);
+void PrintFileHeader(FILE*);
 void PrintPresenterHeader(FILE*);
 void PrintPresentationHeader(FILE*);
 #endif

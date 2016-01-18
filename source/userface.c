@@ -6,11 +6,15 @@ extern List listofcatalogues;
 extern Presenter *tabPr;
 extern Presentation *tabPn;
 char *buffer;
-char *binfilemane;
-char *txtfilename;
-char *passwd;
+
 
 int Exit(){
+
+
+    Msg(EXIT_PROMPT,0);
+    if(strcmp(ReadData(buffer),"TAK"));
+    else return 1;
+
 
 	Element * temp;
 	temp = listofpresenters.head;
@@ -38,12 +42,6 @@ int Exit(){
 	free(tabPr);
 	free(tabPn);
 	free(buffer);
-	free(txtfilename);
-	free(binfilemane);
-	free(passwd);
-
-	/*SaveBin();
-	SaveRaw(); */
 
 	return 0;
 }
@@ -112,16 +110,20 @@ void Msg(msgtype message, int position){
     printf("Pomyslnie odczytano plik \n");
     break;
 
-	case CREATE_FILE_PROMPT:
-	printf("Czy chcesz utworzyc plik ? \n");
-	break;
-
-	case CREATE_FILE_SUCCES:
+	case FILE_CREATE_SUCCES:
 	printf("Pomyslnie utworzono plik \n");
 	break;
 
-	case CREATE_FILE_ERR:
+	case FILE_CREATE_ERR:
 	printf("Blad przy tworzeniu pliku \n");
+	break;
+
+    case FILE_SAVE_SUCCES:
+	printf("Pomyslnie zapisano plik \n");
+	break;
+
+	case FILE_SAVE_ERR:
+	printf("Blad przy zapisywaniu pliku \n");
 	break;
 
 	case PRESENTER_ADD:
@@ -309,6 +311,10 @@ void Msg(msgtype message, int position){
 	case CONTINUE:
     printf("Aby kontynuowac wpisz 1, aby zakonczyc wpisz 0.\n");
     break;
+
+    case EXIT_PROMPT:
+    printf("Aby  wyjść wpisz cokolwoek(oprocz TAK), aby zakonczyc wpisz TAK\n");
+    break;
 	}
 }
 
@@ -317,9 +323,6 @@ void DataInit(){
 	if(OpenRaw())Msg(RAW_ERR,0);*/
 
 	buffer = malloc(256*sizeof(char));
-	binfilemane = malloc(128*sizeof(char));
-	txtfilename = malloc(128*sizeof(char));
-	passwd = malloc(128*sizeof(char));
 	listofpresentations.lenght=0;
 	listofpresenters.lenght=0;
 	listofcatalogues.lenght=0;
@@ -406,7 +409,7 @@ void Begin(){
         }
 	}while(ReadFromStd());
 
-	Exit();
+	while(Exit());
 }
 
 void UserPresenterAdd(){
@@ -564,6 +567,8 @@ int CommandParse(char *input){
 	char temppasswd[128];
 	int i=1;
 	int result=0;
+	FILE *filetemp;
+	filetemp = NULL;
 
 	strcpy(stemp,input);
 	token = strtok(stemp,dump);
@@ -574,20 +579,16 @@ int CommandParse(char *input){
             else {Msg(INPUT_ERR,i); return 0;}
         }
 		if(i==2){
-            if(strcmp(token,"plik.txt")==0)result += 4;
-            else if(strcmp(token,"plik.ula")==0)result += 8;
-            else {Msg(INPUT_ERR,i); return 0;}
-
             strcpy(filestemp,token);
             filetoken = strtok(filestemp,filedump);
             while(filetoken!=NULL){
-                if(strcmp(filetoken,"txt")==0)result += 16;
-                else if(strcmp(filetoken,"ula")==0)result += 32;
+                if(strcmp(filetoken,"txt")==0)result += 4;
+                else if(strcmp(filetoken,"ula")==0)result += 8;
                 filetoken = strtok(NULL,filedump);
             }
             if(result==0){Msg(INPUT_ERR,i); return 0;}
-            else if(result<32)strcpy(temptxtfilename,token);
-            else if (result>32)strcpy(tempbinfilemane,token);
+            else if((result<8)&&(result>4))strcpy(temptxtfilename,token);
+            else if (result>8)strcpy(tempbinfilemane,token);
             else return 0;
 		}
 		if(i==3){
@@ -597,7 +598,37 @@ int CommandParse(char *input){
 		i++;
 	}
 
-	/*add option recognizion*/
+	/*results from commands*/
+	switch (result){
+
+        case 5: /*zapisz .txt*/
+            if(CreateRaw(temptxtfilename,filetemp))Msg(FILE_CREATE_ERR,0);
+            if(SaveRaw(filetemp))Msg(FILE_SAVE_ERR,0);
+            else Msg(FILE_SAVE_SUCCES,0);
+        break;
+
+        case 6: /*odczytaj .txt*/
+            if(OpenRaw(temptxtfilename,filetemp))Msg(FILE_OPEN_ERR,0);
+            if(LoadRaw(filetemp))Msg(FILE_READ_ERR,0);
+            else Msg(FILE_READ_SUCCES,0);
+        break;
+
+        case 9: /*zapisz .ula */;
+            if(SaveBin(temppasswd,CreateBin(tempbinfilemane,filetemp)))Msg(FILE_SAVE_ERR,0);
+            else Msg(FILE_SAVE_SUCCES,0);
+        break;
+
+        case 10: /*odczytaj .ula*/
+            if(OpenBin(tempbinfilemane,filetemp))Msg(FILE_OPEN_ERR,0);
+            if(LoadBin(temppasswd,filetemp))Msg(FILE_READ_ERR,0);
+            else Msg(FILE_READ_SUCCES,0);
+        break;
+
+        default:
+            Msg(INPUT_ERR,0);
+        break;
+	}
+fclose(filetemp);
 return 0;
 }
 
