@@ -88,3 +88,23 @@ Za pobieranie danych od użytkownika odpowiadają dwie funkcje:
 int ReadFromStd();/*funkcja zwraca pobraną od użytkownika zmienną liczbową i ją zwraca*/
 char *ReadData(char*);/*funkcja zwraca pobrany od użytkownika ciąg znaków*/
 ```
+Pobrane dane tekstowe w postaci komend są dzielone na słowa przy pomocy funkcji strtok()
+A następnie w zależności od podanej pozycji menu interpretowane przez funkcje organizacyjne.
+Ich deklaracje przedstawione są poniżej: 
+```C
+void UserPresenterAdd();
+void UserPresentationAdd();
+void UserCatalougeAdd();
+void UserPresenterDel();
+void UserPresentationDel();
+void UserPresenterUpdate();
+void UserPresentationUpdate();
+void UserPresenterPrintTable();
+void UserPresentationPrintTable();
+void UserPrintCatTable();
+void UserFileHandling();
+void UserSearch();
+```
+Funkcje odpowiadają bezpośrednio realizacji danego elementu z menu programu. 
+Korzystają one z niskopoziomowych funkcji odpowiedzialnych za realizację malych elementów. 
+Opis funkcji niskopoziomowych znajduje się niżej. 
