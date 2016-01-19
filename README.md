@@ -115,3 +115,52 @@ int CommandParse(char*);
 Funkcja ta dzleli pobraną komendę na słowa a następnie dzieli nazwę pliku na nazwę i rozszerzenie poprzez separator "." Funkcja wykonuje operację na plikach w zależności od komendy (odczytać/zapisz) (nazwa pliku.rozszerzenie) (hasło dla pliku binarnego) 
 
 #####Funkcje niskopoziomowe
+Poniższe funkcję odpowiadają za obsługę bazy danych
+```C
+Presenter *AddPresenter(char*);
+Presentation *AddPresentation(char*);
+Element *FindPresenter(char*, List*);
+Element *FindPresentation(char*, List*);
+int DeletePresenter(Element*);
+int DeletePresentation(Element*);
+int UpdatePresenter(Presenter*,char *);
+int UpdatePresentation(Presentation*,char *);
+void PrintPresenterFile(FILE*);
+void PrintSortedPresenterTable(int);
+void PrintPresenterLine(Presenter*,FILE*);
+void PrintPresentationFile(FILE*);
+void PrintSortedPresentationTable(int);
+void PrintPresentationLine(Presentation*,FILE*);
+void PrintPresenterIdTable();
+void PrintPresentationIdTable();
+```
+Pozostają jeszcze funkcje odpowiedzialne za obsługę katalogów
+```C
+void PrintCatHeader(FILE*);
+int PrintCat(Cat*, FILE*);
+int AddToCat(void*, Cat*);
+void PrintCatTable(FILE*);
+List *FindInCats(char*);
+Cat *AddCat(char*);
+```
+#####Sortowanie
+Sortowanie danych polega na zapisaniu danej listy do tablicy wskaźników i następnie posortowania jej przy pomocy funkcji qsort() oraz jednej z poniższych funkcji porownujacych: 
+```C
+int ComparePresenterName(const void*, const void*);
+int ComparePresenterSurname(const void*, const void*);
+int ComparePresenterAffiliation(const void*, const void*);
+int ComparePresenterGen(const void*, const void*);
+int ComparePresenterPayment(const void*, const void*);
+int ComparePresenterPresentations(const void*, const void*);
+int ComparePresentationName(const void*, const void*);
+int ComparePresentationType(const void*, const void*);
+```
+Przykład ciała jednej z podanych funkcji sortujacych:
+```C
+int ComparePresenterName (const void * a, const void * b){
+
+	int x = *(int*)a;
+	int y = *(int*)b;
+	return strcmp(tabPr[x]->name,tabPr[y]->name);
+}
+```
