@@ -167,9 +167,9 @@ int ComparePresenterName (const void * a, const void * b){
 #####Alokacja pamięci
 Pamięć jest złomowania osobno dla każdego elementu listy. Wskaźniki na początek list są zmiennymi globalnymi że względu na częste wykorzystanie. 
 ```C
-*/przykładowa alokacja pamięci*/
+/*przykładowa alokacja pamięci*/
 Presenter *newpresenter;
-newpresenter = calloc(1,sizeof(Presenter)); /* użycie funkcji calloc() ze względu na zeriowanie pamięci*/
+newpresenter=calloc(1,sizeof(Presenter));/*użycie funkcji calloc() ze względu na zeriowanie pamięci*/
 if(newpresenter==NULL)return NULL;
 ```
 Przy wyjściu z programu pamięć jest uwalniana w funkcji exit():
@@ -205,3 +205,16 @@ int Exit(){
 	return 0;
 }
 '''
+###Main
+Funkcja main wywołuje funkcję uruchamiającą interfejs użytkownika dodatkowo pozwala na uruchomienie trybu debugowania w tym celu należy zmienić makro definicję DEBUG na 1
+```C
+#define DEBUG 0
+
+int main(){
+
+	if(DEBUG)Debug();
+	else Begin();
+	return 0;
+}
+```
+###Struktura plików z danymi 
