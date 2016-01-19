@@ -34,13 +34,12 @@ typedef struct Presenter {
 ```
 ######Prezentacja
 ```C
-typedef struct {
-	int pn; //liczba porzdkowa
-	char name[30]; //nazwa prezentacji
-	char type[20]; //typ prezentacji (ustna lub plakat)
-	int owner; //identyfikator wlasciciela prezentacji
-	int visible; //zmienna odpowiadajaca za widocznosc w tabeli
-}Presentation;
+typedef struct Presentation {
+	char name[64];
+	char type;/*0-ustna 1-plakat*/
+	char pn[8];
+	Presenter *owner;
+} Presentation;
 ```
 ######Katalog prezenterow (analogicznie prezentacji)
 ```C
