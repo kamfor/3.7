@@ -253,16 +253,16 @@ void PrintSortedPresenterTable(int sortorder){
 	tab = calloc(listofpresenters.lenght,sizeof(int));
 	tabPr = calloc(listofpresenters.lenght,sizeof(Presenter*));
 	temp = listofpresenters.head;
-	for(i=0;temp!=NULL;temp=temp->next,tabPr[i]=(Presenter*)(temp->obj),i++);
+	for(i=0;temp!=NULL;tabPr[i]=(Presenter*)(temp->obj),temp=temp->next,i++);
 	j=i+1;
 	for(i=0;i<j;tab[i]=i,i++);
 
-	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresenterName);
-	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresenterSurname);
-	if(sortorder==3)qsort(tab,j,sizeof(int),ComparePresenterAffiliation);
-	if(sortorder==4)qsort(tab,j,sizeof(int),ComparePresenterGen);
-	if(sortorder==5)qsort(tab,j,sizeof(int),ComparePresenterPayment);
-	if(sortorder==6)qsort(tab,j,sizeof(int),ComparePresenterPresentations);
+	if(sortorder==1)qsort(tab,i,sizeof(int),ComparePresenterName);
+	if(sortorder==2)qsort(tab,i,sizeof(int),ComparePresenterSurname);
+	if(sortorder==3)qsort(tab,i,sizeof(int),ComparePresenterAffiliation);
+	if(sortorder==4)qsort(tab,i,sizeof(int),ComparePresenterGen);
+	if(sortorder==5)qsort(tab,i,sizeof(int),ComparePresenterPayment);
+	if(sortorder==6)qsort(tab,i,sizeof(int),ComparePresenterPresentations);
 	for(i=0;i<j;i++)PrintPresenterLine(tabPr[tab[i]],stdout);
 	free(tab);
 }

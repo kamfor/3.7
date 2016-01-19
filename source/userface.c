@@ -330,6 +330,7 @@ void DataInit(){
 
 void Begin(){
 
+    int control;
 	Msg(CLEAR,0);
 	Msg(WELCOME,0);
 	Msg(WELCOME_PROMPT,0);
@@ -339,7 +340,8 @@ void Begin(){
         Msg(CLEAR,0);
         Msg(MAINMENU,0);
         Msg(MENU_PROMPT,0);
-        switch (ReadFromStd()){
+        control = ReadFromStd();
+        switch (control){
 
             case 0:
                 Exit();
@@ -407,7 +409,7 @@ void Begin(){
 
 
         }
-	}while(ReadFromStd());
+	}while(control);
 
 	while(Exit());
 }
