@@ -1,6 +1,6 @@
 # 3.7
 ##Wspomaganie organizacji konferencji
-Program pozwala na dodawanie i edycje danych o prezenterach i prezentacjach. Dane przechowywane sa w tablicach struktur. Kod zrodlowy znajduje sie w plikach main.c oraz funkcje.c.
+Program pozwala na dodawanie i edycje danych o prezenterach i prezentacjach. Dane przechowywane sa w tablicach struktur. Kod zrodlowy znajduje sie w plikach *.c oraz w folderze source. 
 ###Typy danych:
 ######Prezenter
 ```C
