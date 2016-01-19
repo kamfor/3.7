@@ -22,17 +22,15 @@ int dellist(List*); \*usuwanie listy*\
 ###Typy danych:
 ######Prezenter
 ```C
-typedef struct {
-	int pn; // liczba porzadkowa
-	char name[]; //imie
-	char surname[]; //nazwisko
-	char affiliation[]; //afiliacja
-	char gen[]; //rodzaj wystapienia
-	char payment[]; //rodzaj platnosci
-	int presentation[]; //tablica identyfikatorow prezentacji
-	int nofpresentations; //liczba prezentacji
-	int visible; //zmienna odpowiadajaca za widocznosc 
-}Presenter; 
+typedef struct Presenter {
+	char name[64];
+	char surname[64];
+	char affiliation[128];
+	char gen; /*0-brak 1-ustne 2-plakat*/
+	char payment; /*0-brak 1-zaplacono*/
+	char pn[8];
+	List presentations;
+} Presenter;
 ```
 ######Prezentacja
 ```C
