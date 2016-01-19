@@ -3,7 +3,22 @@
 Program pozwala na dodawanie i edycje danych o prezenterach i prezentacjach. Dane przechowywane sa w tablicach struktur. Kod zrodlowy znajduje sie w plikach *.c oraz w folderze source. Baze danych mozna wczytac z pliku tekstowego lub binarnego chronionego haslem i zapisac dane do obu typow plikow. 
 ###Struktura listy:
 ```C
+typedef struct Element {
+	struct Element *prev;
+	struct Element *next; 
+	void *obj; 
+} Element;	
 
+typedef struct List {
+	Element *head; 
+	Element *tail;
+	int lenght; 
+} List; 
+	
+int addnode(void*, List*); \*dodawanie elementu do listy*\
+int delnode(Element*,List*); \*usuwanie elementu z listy*\
+int dellist(List*); \*usuwanie listy*\
+```
 ###Typy danych:
 ######Prezenter
 ```C
