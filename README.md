@@ -164,3 +164,44 @@ int ComparePresenterName (const void * a, const void * b){
 	return strcmp(tabPr[x]->name,tabPr[y]->name);
 }
 ```
+#####Alokacja pamięci
+Pamięć jest złomowania osobno dla każdego elementu listy. Wskaźniki na początek list są zmiennymi globalnymi że względu na częste wykorzystanie. 
+```C
+*/przykładowa alokacja pamięci*/
+Presenter *newpresenter;
+newpresenter = calloc(1,sizeof(Presenter)); /* użycie funkcji calloc() ze względu na zeriowanie pamięci*/
+if(newpresenter==NULL)return NULL;
+```
+Przy wyjściu z programu pamięć jest uwalniana w funkcji exit():
+```C
+int Exit(){
+
+	Element * temp;
+	temp = listofpresenters.head;
+	while(temp!=NULL){
+
+		if(delnode(temp,&listofpresenters))return 1;
+		temp = temp->next;
+	}
+	if(dellist(&listofpresenters))return 1;
+	temp = listofpresentations.head;
+	while(temp!=NULL){
+
+		if(delnode(temp,&listofpresentations))return 1;
+		temp = temp->next;
+	}
+	if(dellist(&listofpresentations))return 1;
+	temp = listofcatalogues.head;
+	while(temp!=NULL){
+
+		if(delnode(temp,&listofcatalogues))return 1;
+		temp = temp->next;
+	}
+	if(dellist(&listofcatalogues))return 1;
+
+	free(tabPr);
+	free(tabPn);
+	free(buffer);
+	return 0;
+}
+'''
