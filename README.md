@@ -108,3 +108,10 @@ void UserSearch();
 Funkcje odpowiadają bezpośrednio realizacji danego elementu z menu programu. 
 Korzystają one z niskopoziomowych funkcji odpowiedzialnych za realizację malych elementów. 
 Opis funkcji niskopoziomowych znajduje się niżej. 
+Ostatnią istotną funkcją interfejsu użytkownika jeat funkcja interpretacji komend obsługi plików
+```C
+int CommandParse(char*);
+```
+Funkcja ta dzleli pobraną komendę na słowa a następnie dzieli nazwę pliku na nazwę i rozszerzenie poprzez separator "." Funkcja wykonuje operację na plikach w zależności od komendy (odczytać/zapisz) (nazwa pliku.rozszerzenie) (hasło dla pliku binarnego) 
+
+#####Funkcje niskopoziomowe
