@@ -63,3 +63,28 @@ int SaveRaw(FILE*);
 int LoadBin(char*,FILE*);
 int LoadRaw(FILE*);
 ```
+#####Interfejs użytkownika
+Interfejs użytkownika oparty jest o funkcję 
+```C
+void Msg(msgtype, int);
+```
+Oraz typu wyliczeniowego zawierającego możliwe typy komunikatów
+```C
+typedef enum msgtype {
+	WELCOME,
+	CLEAR,
+	MAINMENU,
+	FILE_MENU,
+	FILE_OPEN_ERR,
+        /*etc.*/
+}msgtype;
+```
+Przykładowe użycie funkcji
+```C
+if(LoadRaw(filetemp))Msg(FILE_READ_ERR,0);/*informacja o błędzie odczytu pliku*/
+```
+Za pobieranie danych od użytkownika odpowiadają dwie funkcje:
+```C
+int ReadFromStd();/*funkcja zwraca pobraną od użytkownika zmienną liczbową i ją zwraca*/
+char *ReadData(char*);/*funkcja zwraca pobrany od użytkownika ciąg znaków*/
+```
