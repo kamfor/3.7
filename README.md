@@ -204,7 +204,7 @@ int Exit(){
 	free(buffer);
 	return 0;
 }
-'''
+```
 ###Main
 Funkcja main wywołuje funkcję uruchamiającą interfejs użytkownika dodatkowo pozwala na uruchomienie trybu debugowania w tym celu należy zmienić makro definicję DEBUG na 1
 ```C
