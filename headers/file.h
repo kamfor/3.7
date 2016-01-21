@@ -9,9 +9,9 @@
 #include "cat.h"
 
 FILE *CreateBin(char*,FILE*);
-int CreateRaw(char*,FILE*);
-int OpenBin(char*,FILE*);
-int OpenRaw(char*,FILE*);
+FILE *CreateRaw(char*,FILE*);
+FILE *OpenBin(char*,FILE*);
+FILE *OpenRaw(char*,FILE*);
 int SaveBin(char*,FILE*);
 int SaveRaw(FILE*);
 int LoadBin(char*,FILE*);

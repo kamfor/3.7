@@ -41,7 +41,6 @@ int Exit(){
 
 	free(tabPr);
 	free(tabPn);
-	free(buffer);
 
 	return 0;
 }
@@ -92,6 +91,11 @@ void Msg(msgtype message, int position){
 	printf("Wpisz komende aby wykonac operacje\n");
     printf("Np zapisz/odczytaj nazwapliku.txt\n");
     printf("Np zapisz/odczytaj nazwapliku.lua haslo\n");
+	break;
+
+	case FILE_NEXT:
+	printf("Aby sprobowac jeszcze raz wpisz 1\n");
+    printf("Aby zakonczyc wpisz 0\n");
 	break;
 
 	case FILE_OPEN_ERR:
@@ -165,7 +169,7 @@ void Msg(msgtype message, int position){
     break;
 
     case PRESENTER_PRINT_SORTORDER_LIST:
-    printf("1 - wedlug imienia, 2 - wedlug nazwiska, 3 - wedlug afiliacji 4 -wedlug typu , 5 - wedlug platnosci, 0 - aby zakonczyc \n");
+    printf("1-wedlug imienia,2-wedlug nazwiska,3-wedlug afiliacji,4-wedlug typu,5-wedlug platnosci,0-aby zakonczyc\n");
     break;
 
 	case PRESENTATION_ADD:
@@ -220,7 +224,7 @@ void Msg(msgtype message, int position){
 	case CAT_ADD:
 	printf("Wpisz nazwę katalogu, jego typ (0 - prezenterzy, 1 - prezentacje),\n");
     printf("oraz numery id prezenterow lub prezentacji z listy powyzej.\n");
-    printf("Pozycje rozdziel srednikiem np. Katalogprezenterow;0;12;123;643;");
+    printf("Pozycje rozdziel srednikiem np. Katalogprezenterow;0;12;123;643;\n");
 	break;
 
 	case CAT_ADD_NEXT:
@@ -319,8 +323,6 @@ void Msg(msgtype message, int position){
 }
 
 void DataInit(){
-	/*if(OpenBin())Msg(BIN_ERR,0);
-	if(OpenRaw())Msg(RAW_ERR,0);*/
 
 	buffer = malloc(256*sizeof(char));
 	listofpresentations.lenght=0;
@@ -526,13 +528,8 @@ void UserPrintCatTable(){
 void UserFileHandling(){
     do{
         Msg(FILE_MENU,0);
-        switch (CommandParse(ReadData(buffer))){
-        case 1: /*wrong command*/break;
-        case 2: /*file n exist*/ break;
-        case 3: /*blad podczas otwarcia pliku*/break;
-        case 4: /*bledne haslo*/ break;
-        }
-
+        if(CommandParse(ReadData(buffer)))Msg(FILE_SAVE_ERR,0);
+        Msg(FILE_NEXT,0);
     }while(ReadFromStd());
 }
 
@@ -558,8 +555,8 @@ void UserSearch(){
 }
 
 int CommandParse(char *input){
-    char dump[] = " ";
-    char filedump[] = ".";
+    char dump[] = " \n";
+    char filedump[] = ".\n";
 	char *token;
 	char *filetoken;
 	char stemp[1024];
@@ -578,25 +575,26 @@ int CommandParse(char *input){
 		if(i==1){
             if(strcmp(token,"zapisz")==0)result = 1;
             else if(strcmp(token,"odczytaj")==0)result = 2;
-            else {Msg(INPUT_ERR,i); return 0;}
+            else {Msg(INPUT_ERR,i); return 1;}
         }
-		if(i==2){
+ 		if(i==2){
             strcpy(filestemp,token);
             filetoken = strtok(filestemp,filedump);
             while(filetoken!=NULL){
+                printf("%s\n",filetoken);
                 if(strcmp(filetoken,"txt")==0)result += 4;
                 else if(strcmp(filetoken,"ula")==0)result += 8;
                 filetoken = strtok(NULL,filedump);
             }
-            if(result==0){Msg(INPUT_ERR,i); return 0;}
+            if(result==0){Msg(INPUT_ERR,i); return 1;}
             else if((result<8)&&(result>4))strcpy(temptxtfilename,token);
             else if (result>8)strcpy(tempbinfilemane,token);
-            else return 0;
+            else return 1;
 		}
 		if(i==3){
             strcpy(temppasswd,token);
 		}
-		token = strtok(NULL, dump);
+		token = strtok(NULL,dump);
 		i++;
 	}
 
@@ -604,14 +602,12 @@ int CommandParse(char *input){
 	switch (result){
 
         case 5: /*zapisz .txt*/
-            if(CreateRaw(temptxtfilename,filetemp))Msg(FILE_CREATE_ERR,0);
-            if(SaveRaw(filetemp))Msg(FILE_SAVE_ERR,0);
+            if(SaveRaw(CreateRaw(temptxtfilename,filetemp)))Msg(FILE_SAVE_ERR,0);
             else Msg(FILE_SAVE_SUCCES,0);
         break;
 
         case 6: /*odczytaj .txt*/
-            if(OpenRaw(temptxtfilename,filetemp))Msg(FILE_OPEN_ERR,0);
-            if(LoadRaw(filetemp))Msg(FILE_READ_ERR,0);
+            if(LoadRaw(OpenRaw(temptxtfilename,filetemp)))Msg(FILE_READ_ERR,0);
             else Msg(FILE_READ_SUCCES,0);
         break;
 
@@ -621,8 +617,7 @@ int CommandParse(char *input){
         break;
 
         case 10: /*odczytaj .ula*/
-            if(OpenBin(tempbinfilemane,filetemp))Msg(FILE_OPEN_ERR,0);
-            if(LoadBin(temppasswd,filetemp))Msg(FILE_READ_ERR,0);
+            if(LoadBin(temppasswd,OpenBin(tempbinfilemane,filetemp)))Msg(FILE_READ_ERR,0);
             else Msg(FILE_READ_SUCCES,0);
         break;
 
@@ -630,7 +625,6 @@ int CommandParse(char *input){
             Msg(INPUT_ERR,0);
         break;
 	}
-fclose(filetemp);
 return 0;
 }
 

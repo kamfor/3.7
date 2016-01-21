@@ -43,13 +43,6 @@ Presenter *AddPresenter(char *fields){
 			strcpy(newpresenter->surname,token);
 		}
 		if(i==3){
-			for(j=0; j<strlen(token); j++){
-				if(isalpha(token[j]));
-				else {
-					Msg(INPUT_ERR,i);
-					return NULL;
-				}
-			}
 			strcpy(newpresenter->affiliation,token);
 		}
 		if(i==4){
@@ -114,13 +107,6 @@ Presentation *AddPresentation(char *fields){
 	token = strtok(stemp,dump);
 	while(token != NULL){
 		if(i==1){
-			for(j=0; j<strlen(token); j++){
-				if(isalpha(token[j]));
-				else {
-					Msg(INPUT_ERR,i);
-					return NULL;
-				}
-			}
 			strcpy(newpresentation->name,token);
 		}
 		if(i==2){
@@ -132,7 +118,6 @@ Presentation *AddPresentation(char *fields){
 				return NULL;
 			}
 		}
-
 		if(i==3){
 			for(j=0; j<strlen(token); j++){
 				if(isdigit(token[j]));
@@ -166,10 +151,10 @@ Element *FindPresenter(char *field, List *anlist){
 	while(temp !=NULL){
 
 		this = (Presenter*)temp->obj;
-		if(strcmp(field,this->name))return temp;
-		else if (strcmp(field,this->surname))return temp;
-		else if (strcmp(field,this->affiliation)) return temp;
-		else if (strcmp(field,this->pn)) return temp;
+		if(!strcmp(field,this->name))return temp;
+		else if (!strcmp(field,this->surname))return temp;
+		else if (!strcmp(field,this->affiliation)) return temp;
+		else if (!strcmp(field,this->pn)) return temp;
 		else return NULL;
 		temp = temp->next;
 	}
@@ -236,7 +221,7 @@ void PrintPresenterFile(FILE *stream){
 		this = (Presenter*)temp->obj;
 
 		fprintf(stream,"%s;%s;%s;",this->name,this->surname,this->affiliation);
-		fprintf(stream,"%c:%c;",this->gen,this->payment);
+		fprintf(stream,"%c;%c;",this->gen,this->payment);
 		fprintf(stream,"%s;",this->pn);
 		for(prestemp = this->presentations.head;prestemp!=NULL;prestemp = prestemp->next){
 			him = (Presentation*)prestemp->obj;
@@ -253,8 +238,8 @@ void PrintSortedPresenterTable(int sortorder){
 	tab = calloc(listofpresenters.lenght,sizeof(int));
 	tabPr = calloc(listofpresenters.lenght,sizeof(Presenter*));
 	temp = listofpresenters.head;
-	for(i=0;temp!=NULL;tabPr[i]=(Presenter*)(temp->obj),temp=temp->next,i++);
-	j=i+1;
+	for(i=0;temp!=NULL;i++){tabPr[i]=(Presenter*)(temp->obj);temp=temp->next;}
+	j=i;
 	for(i=0;i<j;tab[i]=i,i++);
 
 	if(sortorder==1)qsort(tab,i,sizeof(int),ComparePresenterName);
@@ -275,7 +260,7 @@ void PrintPresenterLine(Presenter *any, FILE *stream){
 
 	if(any!=NULL){
         temp = any->presentations.head;
-        fprintf(stream,"|%4s|%30s|%30s|%40s|",any->pn,any->name,any->surname,any->affiliation);
+        fprintf(stream,"|%4s|%20s|%20s|%30s|",any->pn,any->name,any->surname,any->affiliation);
         if(any->gen=='0')fprintf(stream,"brak  |");
         if(any->gen=='1')fprintf(stream,"ustne |");
         if(any->gen=='2')fprintf(stream,"plakat|");
@@ -286,6 +271,7 @@ void PrintPresenterLine(Presenter *any, FILE *stream){
             for(i=0; i<121;i++)fprintf(stream," ");
             fprintf(stream,"|%20s|\n",him->name);
 	    }
+	    printf("\n");
 	}
 }
 
@@ -309,7 +295,7 @@ void PrintSortedPresentationTable(int sortorder){
 	tabPn = calloc(listofpresentations.lenght,sizeof(Presentation*));
 	temp = listofpresentations.head;
 	for(i=0,temp=listofpresentations.head;temp!=NULL;tabPn[i]=(Presentation*)(temp->obj),temp=temp->next,i++);
-	j = i+1;
+	j = i;
 	for(i=0; i<j;tab[i]=i,i++);
 
 	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresenterName);
@@ -334,7 +320,7 @@ void PrintPresenterIdTable(){
 	Element *temp;
 	Presenter *this;
 	printf("Lista id prezenterów:\n");
-	for(temp = listofpresenters.head;temp!=NULL;temp = temp->next){
+	for(temp=listofpresenters.head;temp!=NULL;temp=temp->next){
 		this = (Presenter*)temp->obj;
 		fprintf(stdout,"%s;\n",this->pn);
 	}

@@ -4,7 +4,8 @@ int addnode(void *item, List *anlist){
 
     Element *new;
     if(item==NULL) return 1;
-	if((new=(Element *)malloc(sizeof(Element)))==NULL)return 1;
+    new=calloc(1,sizeof(Element));
+	if((new==NULL))return 1;
 
 	new->obj = item;
 
@@ -18,9 +19,11 @@ int addnode(void *item, List *anlist){
 	else{
 		new->next = NULL;
 		new->prev = anlist->tail;
+		(anlist->tail)->next = new;
 		anlist->tail = new;
 		anlist->lenght++;
 	}
+	printf("%d\n",anlist->lenght); /*debug usunto*/
 	return 0;
 }
 

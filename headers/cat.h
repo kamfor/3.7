@@ -15,7 +15,7 @@ typedef struct Cat{
 
 void PrintCatHeader(FILE*);
 int PrintCat(Cat*, FILE*);
-int AddToCat(void*, Cat*);
+int AddToCat(Element*, Cat*);
 void PrintCatTable(FILE*);
 List *FindInCats(char*);
 Cat *AddCat(char*);

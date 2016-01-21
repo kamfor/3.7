@@ -13,25 +13,25 @@ FILE *CreateBin(char *filename,FILE *filepointer){
 	return filepointer;
 }
 
-int CreateRaw(char *filename,FILE *filepointer) {
+FILE *CreateRaw(char *filename,FILE *filepointer) {
 
 	filepointer = fopen(filename,"w");
-	if(filepointer==NULL) return 1;
-	return 0;
+	if(filepointer==NULL) return NULL;
+	return filepointer;
 }
 
-int OpenBin(char *filename, FILE *filepointer){
+FILE *OpenBin(char *filename, FILE *filepointer){
 
 	filepointer = fopen(filename,"rb+");
-	if(filepointer == NULL)return 1;
-	return 0;
+	if(filepointer == NULL)return NULL;
+	return filepointer;
 }
 
-int OpenRaw(char *filename,FILE *filepointer){
+FILE *OpenRaw(char *filename,FILE *filepointer){
 
 	filepointer = fopen(filename,"r+");
-	if(filepointer == NULL)return 1;
-    return 0;
+	if(filepointer == NULL)return NULL;
+    return filepointer;
 }
 
 int SaveBin(char *passwd,FILE *filepointer){
@@ -63,7 +63,6 @@ int SaveRaw(FILE *filepointer){
 	PrintPresenterFile(filepointer);
 	PrintPresentationHeader(filepointer);
 	PrintPresentationFile(filepointer);
-	PrintCatHeader(filepointer);
 	PrintCatTable(filepointer);
 	fclose(filepointer);
 	return 0;
@@ -105,7 +104,7 @@ int LoadRaw(FILE *filepointer){
 	char line[1024];
 
 	for(;!feof(filepointer);){
-		fgets(line,1024,fileraw);
+		fgets(line,1024,filepointer);
 		if(line[0]=='1'){control= 1;fgets(line,1024,filepointer);}
 		if(line[0]=='2'){control= 2;fgets(line,1024,filepointer);}
 		if(line[0]=='3'){control= 3;fgets(line,1024,filepointer);}

@@ -12,6 +12,7 @@ typedef enum msgtype {
 	CLEAR,
 	MAINMENU,
 	FILE_MENU,
+	FILE_NEXT,
 	FILE_OPEN_ERR,
 	FILE_OPEN_SUCCES,
 	FILE_READ_ERR,
