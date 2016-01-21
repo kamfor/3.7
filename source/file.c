@@ -43,7 +43,7 @@ int SaveBin(char *passwd,FILE *filepointer){
 	rawpointer = fopen("temp","r");
 
 	rewind(filepointer);
-	strcpy(line,passwd);
+	strcpy(line,hash(passwd));
 	fwrite((void*)line,sizeof(line),1,filepointer);
 	while(!feof(rawpointer)){
 		fgets(line,1024,rawpointer);
@@ -73,7 +73,7 @@ int LoadBin(char *passwd,FILE *filepointer){
 	char line[1024];
 	int control=0;
 	fread((void *)line,sizeof(line),1,filepointer);
-	if(strcmp(line,passwd))return 2;
+	if(strcmp(line,hash(passwd)));
 	for(;!feof(filepointer);){
 		fread((void *)line,sizeof(line),1,filepointer);
 		if(line[0]=='1'){control= 1;fread((void *)line,sizeof(line),1,filepointer);}
@@ -93,7 +93,6 @@ int LoadBin(char *passwd,FILE *filepointer){
                 break;
             }
 		}
-		fread((void *)line,sizeof(line),1,filepointer);
 	}
 	fclose(filepointer);
 	return 0;
@@ -122,7 +121,6 @@ int LoadRaw(FILE *filepointer){
 				break;
 			}
 		}
-		fgets(line,1024,filepointer);
 	}
 	fclose(filepointer);
 	return 0;
@@ -139,4 +137,10 @@ void PrintPresenterHeader(FILE *stream){
 
 void PrintPresentationHeader(FILE *stream){
 	fprintf(stream,"2 Nazwa;Typ;Id prezentera\n");
+}
+
+char *hash(char *passwd){
+    int i;
+    for(i=0; i<strlen(passwd);i++)passwd[i] = passwd[i]%10;
+    return passwd;
 }

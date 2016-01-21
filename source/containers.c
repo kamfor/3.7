@@ -12,6 +12,7 @@ Presenter *AddPresenter(char *fields){
 
 	Presenter *newpresenter;
 	Presentation *him;
+	Element *temp;
 	char dump[] = ";\n";
 	char *token;
 	char stemp[1024];
@@ -77,7 +78,9 @@ Presenter *AddPresenter(char *fields){
                     return NULL;
                 }
             }
-            him = ((Presentation*)((FindPresentation(token,&listofpresentations))->obj));
+
+            temp = FindPresentation(token,&listofpresentations);
+            if(temp!=NULL)him = (Presentation*)(temp->obj);
             if(him!=NULL){
                 him->owner = newpresenter;
                 addnode(him,&(newpresenter->presentations));
@@ -186,6 +189,7 @@ Element *FindPresentation(char *field, List *anlist){
 
 	Element *temp;
 	Presentation *this;
+	if(anlist==NULL)return NULL;
 	temp = anlist->head;
 	if(field[strlen(field)-1]=='\n')field[strlen(field)-1]='\0';
 
@@ -209,7 +213,7 @@ int DeletePresenter(Element *dead){
 int DeletePresentation(Element *dead){
 
 	if(delnode(dead,&listofpresentations))return 1;
-	if(delnode(FindPresentation(((Presentation*)(dead->obj))->pn,FindInCats(((Presentation*)(dead->obj))->pn)),FindInCats(((Presentation*)(dead->obj))->pn)))return 0;
+	if(delnode(FindPresentation((((Presentation*)(dead->obj))->pn),FindInCats(((Presentation*)(dead->obj))->pn)),FindInCats(((Presentation*)(dead->obj))->pn)))return 0;
 	return 0;
 }
 
@@ -243,7 +247,6 @@ void PrintPresenterFile(FILE *stream){
 
 		fprintf(stream,"%s;%s;%s;",this->name,this->surname,this->affiliation);
 		fprintf(stream,"%c;%c;",this->gen,this->payment);
-		fprintf(stream,"%s;",this->pn);
 		for(prestemp = this->presentations.head;prestemp!=NULL;prestemp = prestemp->next){
 			him = (Presentation*)prestemp->obj;
 			fprintf(stream,"%s;",him->pn);
@@ -306,7 +309,7 @@ void PrintPresentationFile(FILE * stream){
 	for(;temp!=NULL;temp = temp->next){
 		this = (Presentation*)temp->obj;
 		fprintf(stream,"%s;%c;",this->name,this->type);
-		fprintf(stream,"%s;%s;\n",(this->owner)->pn,this->pn);
+		fprintf(stream,"%s;\n",(this->owner)->pn);
 	}
 }
 
@@ -324,7 +327,7 @@ void PrintSortedPresentationTable(int sortorder){
 	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresentationName);
 	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresentationType);
 
-    printf("id   |           Nazwa|          Typ|              Prezenter|\n");
+    printf("|id  |           Nazwa|          Typ|Prez.|\n");
 	for(i=0; i<j; i++)PrintPresentationLine(tabPn[tab[i]],stdout);
 	free(tab);
 }

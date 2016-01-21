@@ -9,13 +9,8 @@ char *buffer;
 
 
 int Exit(){
-    int decision=1;
 
-    do{
-        Msg(EXIT_PROMPT,0);
-        if(!strcmp(ReadData(buffer),"TAK\n"))decision = 0;
-    }while(decision);
-
+    Msg(EXIT_PROMPT,0);
 
 	Element * temp;
 	temp = listofpresenters.head;
@@ -42,7 +37,6 @@ int Exit(){
 
 	if(tabPr!=NULL)free(tabPr);
 	if(tabPn!=NULL)free(tabPn);
-    if(buffer!=NULL)free(buffer);
 
 	return 0;
 }
@@ -319,7 +313,7 @@ void Msg(msgtype message, int position){
     break;
 
     case EXIT_PROMPT:
-    printf("Aby  wyjść wpisz cokolwoek(oprocz TAK), aby zakonczyc wpisz TAK\n");
+    printf("Aby  wyjść wpisz 0\n");
     break;
 	}
 }
@@ -591,7 +585,6 @@ int CommandParse(char *input){
             strcpy(filestemp,token);
             filetoken = strtok(filestemp,filedump);
             while(filetoken!=NULL){
-                printf("%s\n",filetoken);
                 if(strcmp(filetoken,"txt")==0)result += 4;
                 else if(strcmp(filetoken,"ula")==0)result += 8;
                 filetoken = strtok(NULL,filedump);

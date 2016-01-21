@@ -19,4 +19,5 @@ int LoadRaw(FILE*);
 void PrintFileHeader(FILE*);
 void PrintPresenterHeader(FILE*);
 void PrintPresentationHeader(FILE*);
+char *hash(char*);
 #endif
