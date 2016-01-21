@@ -23,13 +23,14 @@ int addnode(void *item, List *anlist){
 		anlist->tail = new;
 		anlist->lenght++;
 	}
-	printf("%d\n",anlist->lenght); /*debug usunto*/
 	return 0;
 }
 
 int delnode(Element *item, List *anlist){
 	if(item==NULL)
 		return 1;
+    if(anlist==NULL)
+        return 1;
 
 	if(item==anlist->head){
 		anlist->head = item->next;

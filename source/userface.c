@@ -9,11 +9,12 @@ char *buffer;
 
 
 int Exit(){
+    int decision=1;
 
-
-    Msg(EXIT_PROMPT,0);
-    if(strcmp(ReadData(buffer),"TAK"));
-    else return 1;
+    do{
+        Msg(EXIT_PROMPT,0);
+        if(!strcmp(ReadData(buffer),"TAK\n"))decision = 0;
+    }while(decision);
 
 
 	Element * temp;
@@ -39,8 +40,9 @@ int Exit(){
 	}
 	if(dellist(&listofcatalogues))return 1;
 
-	free(tabPr);
-	free(tabPn);
+	if(tabPr!=NULL)free(tabPr);
+	if(tabPn!=NULL)free(tabPn);
+    if(buffer!=NULL)free(buffer);
 
 	return 0;
 }
@@ -82,8 +84,8 @@ void Msg(msgtype message, int position){
 	printf("-Wpisz 3 aby usunac prezentera         - wpisz 10 aby wyswietlic liste katalogow        -\n");
 	printf("-Wpisz 4 aby usunac prezentacje        - wpisz 11 aby przejsc do operacji na plikach    -\n");
 	printf("-Wpisz 5 aby dodac katalog             - wpisz 12 aby wyszukac                          -\n");
-	printf("-Wpisz 6 aby edytowac prezentacje      - wpisz 0 aby zakonczyc                          -\n");
-	printf("-Wpisz 7 aby edytowac prezentera                                                        -\n");
+	printf("-Wpisz 6 aby edytowac prezentera       - wpisz 0 aby zakonczyc                          -\n");
+	printf("-Wpisz 7 aby edytowac prezentacje                                                       -\n");
 	printf("-----------------------------------------------------------------------------------------\n");
 	break;
 
@@ -131,8 +133,8 @@ void Msg(msgtype message, int position){
 	break;
 
 	case PRESENTER_ADD:
-	printf("Wpisz w w linii IMIE, NAZWISKO, AFILIACJE, RODZAJ WYSTAPIENIA(0-brak 1-plakat 2-ustne)");
-	printf("STATUS PLATNOSCI (0-brak 1-zaplacono) oraz numery prezentacji z listy poniżej.\n");
+	printf("Wpisz w linii: IMIE, NAZWISKO, AFILIACJE, RODZAJ WYSTAPIENIA(0-brak 1-plakat 2-ustne)\n");
+	printf("STATUS PLATNOSCI (0-brak 1-zaplacono) oraz numery prezentacji z listy poniżej:\n");
 	printf("Pozycje rozdziel srednikiem Np: Jan;Kowalski;Uniwersytet 3-go wieku;1;0;567;2454;21;\n");
 	break;
 
@@ -141,7 +143,7 @@ void Msg(msgtype message, int position){
 	break;
 
     case PRESENTER_DEL:
-	printf("Wpisz numer prezentera z tablicy powyzej ktorego chcesz usunac \n");
+	printf("Wpisz numer prezentera z tablicy powyzej, ktorego chcesz usunac \n");
 	break;
 
     case PRESENTER_DEL_SUCCES:
@@ -157,7 +159,7 @@ void Msg(msgtype message, int position){
 	break;
 
     case PRESENTER_CHANGE_NEXT:
-	printf(" Aby edytowac kolejnego prezentera wpisz 1. Aby zakonczyc wpisz 0.\n");
+	printf("Aby edytowac kolejnego prezentera wpisz 1. Aby zakonczyc wpisz 0.\n");
 	break;
 
     case PRESENTER_CHANGE_ERR:
@@ -173,8 +175,8 @@ void Msg(msgtype message, int position){
     break;
 
 	case PRESENTATION_ADD:
-	printf("Wpisz w linii NAZWE, TYP(0-plakat 1-ustne) oraz ID prezentera z listy poniżej: \n");
-	printf("Pozycje rodzeiel srednikiem: Np: Swietna prezentacja;0;0234 \n");
+	printf("Wpisz w linii NAZWE oraz TYP(0-plakat 1-ustne)\n");
+	printf("Pozycje rodzeiel srednikiem: Np: Swietna prezentacja;0\n");
 	break;
 
 	case PRESENTATION_ADD_SUCCES:
@@ -206,7 +208,7 @@ void Msg(msgtype message, int position){
 	break;
 
     case PRESENTATION_CHANGE_NEXT:
-	printf(" Aby edytowac kolejna prezentacje wpisz 1. Aby zakonczyc wpisz 0.\n");
+	printf("Aby edytowac kolejna prezentacje wpisz 1. Aby zakonczyc wpisz 0.\n");
 	break;
 
     case PRESENTATION_CHANGE_ERR:
@@ -218,12 +220,12 @@ void Msg(msgtype message, int position){
     break;
 
     case PRESENTATION_PRINT_SORTORDER_LIST:
-    printf("1 - wedlug nazwy, 2 - wedlug typu, 0 - aby zakonczyc\n");
+    printf("1-wedlug nazwy,2-wedlug typu,0-aby zakonczyc\n");
     break;
 
 	case CAT_ADD:
 	printf("Wpisz nazwę katalogu, jego typ (0 - prezenterzy, 1 - prezentacje),\n");
-    printf("oraz numery id prezenterow lub prezentacji z listy powyzej.\n");
+    printf("oraz numery id prezenterow lub prezentacji z listy ponizej.\n");
     printf("Pozycje rozdziel srednikiem np. Katalogprezenterow;0;12;123;643;\n");
 	break;
 
@@ -249,7 +251,7 @@ void Msg(msgtype message, int position){
 	break;
 
 	case MENU_ERR:
-	printf("wpisz poprawna wartosc!\n");
+	printf("Wpisz poprawna wartosc!\n");
 	break;
 
 	case INIT_ERR:
@@ -257,7 +259,7 @@ void Msg(msgtype message, int position){
 	break;
 
 	case DEL_ERR:
-	printf("Blad usuwania obiektu \n");
+	printf("Blad usuwania obiektu. \n");
 	break;
 
 	case DEL_NEXT:
@@ -413,12 +415,13 @@ void Begin(){
         }
 	}while(control);
 
-	while(Exit());
+	Exit();
 }
 
 void UserPresenterAdd(){
     do{
         Msg(PRESENTER_ADD,0);
+        PrintPresentationIdTable();
         if(addnode(AddPresenter(ReadData(buffer)),&listofpresenters))Msg(MENU_ERR,0);
         else Msg(PRESENTER_ADD_SUCCES,0);
         Msg(ADD_NEXT,0);
@@ -428,8 +431,8 @@ void UserPresenterAdd(){
 void UserPresentationAdd(){
     do{
         Msg(PRESENTATION_ADD,0);
-        PrintPresenterIdTable();
         if(addnode(AddPresentation(ReadData(buffer)),&listofpresentations))Msg(MENU_ERR,0);
+        else Msg(PRESENTATION_ADD_SUCCES,0);
         Msg(ADD_NEXT,0);
     }while(ReadFromStd());
 }
@@ -489,9 +492,9 @@ void UserPresentationUpdate(){
         PrintPresentationIdTable();
         fgets(id,10,stdin);
         if(FindPresentation(id,&listofpresentations)!=NULL){
-        Msg(PRESENTATION_ADD,0);
-        if(UpdatePresentation(AddPresentation(ReadData(buffer)),id))Msg(PRESENTATION_CHANGE_ERR,0);
-        else Msg(PRESENTATION_CHANGE_SUCCES,0);
+            Msg(PRESENTATION_ADD,0);
+            if(UpdatePresentation(AddPresentation(ReadData(buffer)),id))Msg(PRESENTATION_CHANGE_ERR,0);
+            else Msg(PRESENTATION_CHANGE_SUCCES,0);
         }
         else Msg(PRESENTATION_NEXIST,0);
         Msg(PRESENTATION_CHANGE_NEXT,0);
@@ -534,21 +537,28 @@ void UserFileHandling(){
 }
 
 void UserSearch(){
+    Element *wanted;
     Presenter *temp;
     Presentation *ptemp;
     do{
         Msg(SEARCH,0);
         if(ReadFromStd()){
             Msg(SEARCH_PRESENTER,0);
-            temp = (Presenter*)(FindPresenter(ReadData(buffer),&listofpresenters))->obj;
-            if(temp==NULL)Msg(SEARCH_ERR,0);
-            else PrintPresenterLine(temp,stdout);
+            wanted = FindPresenter(ReadData(buffer),&listofpresenters);
+            if(wanted==NULL)Msg(SEARCH_ERR,0);
+            else {
+                temp = (Presenter*)(wanted->obj);
+                PrintPresenterLine(temp,stdout);
+            }
         }
         else{
             Msg(SEARCH_PRESENTATION,0);
-            ptemp = (Presentation*)(FindPresentation(ReadData(buffer),&listofpresentations))->obj;
-            if(ptemp==NULL)Msg(SEARCH_ERR,0);
-            else PrintPresentationLine(ptemp,stdout);
+            wanted = FindPresentation(ReadData(buffer),&listofpresentations);
+            if(wanted==NULL)Msg(SEARCH_ERR,0);
+            else {
+                PrintPresentationLine(ptemp,stdout);
+                ptemp = (Presentation*)(wanted->obj);
+            }
         }
         Msg(SEARCH_NEXT,0);
     }while(ReadFromStd());

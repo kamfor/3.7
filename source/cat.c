@@ -12,9 +12,9 @@ int PrintCat(Cat *tmp, FILE *stream){
 	Element *temp;
 	Presenter *this;
 	Presentation *him;
-	temp = tmp->listofelements.head;
+	temp = (tmp->listofelements).head;
 
-	fprintf(stream,"%s,%c",tmp->name,tmp->type);
+	fprintf(stream,"%s;%c;",tmp->name,tmp->type);
 
 	if(tmp->type=='0'){
 
@@ -37,7 +37,7 @@ int PrintCat(Cat *tmp, FILE *stream){
 	return 1;
 }
 
-int AddToCat(Element *element, Cat *catalogue){
+int AddToCat(void *element, Cat *catalogue){
 
 	if(addnode(element,&(catalogue->listofelements)))return 1;
 
@@ -124,7 +124,7 @@ Cat *AddCat(char *fields){
 			}
 			temp = FindPresenter(token,&listofpresenters);
 			if(temp==NULL)return NULL;
-			if(AddToCat(temp,newcat)){Msg(INPUT_ERR,i);return NULL;};
+			if(AddToCat(temp->obj,newcat)){Msg(INPUT_ERR,i);return NULL;};
 		}
 		token = strtok(NULL,dump);
 		i++;

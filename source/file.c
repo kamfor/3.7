@@ -59,10 +59,10 @@ int SaveBin(char *passwd,FILE *filepointer){
 int SaveRaw(FILE *filepointer){
 
 	PrintFileHeader(filepointer);
+    PrintPresentationHeader(filepointer);
+	PrintPresentationFile(filepointer);
 	PrintPresenterHeader(filepointer);
 	PrintPresenterFile(filepointer);
-	PrintPresentationHeader(filepointer);
-	PrintPresentationFile(filepointer);
 	PrintCatTable(filepointer);
 	fclose(filepointer);
 	return 0;
