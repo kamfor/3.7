@@ -52,6 +52,8 @@ typedef struct Cat{
 
 ###Funkcje 
 #####Obsluga plików
+Dane z programu możemy zapisywać za pomocą komend odczytaj/zapisz dodatkowo plik binarny jest zabezpieczony 
+hasłem które jest przechowywane w postaci skrótu wygenerowaanego przez funkcję.
 
 ```C
 FILE *CreateBin(char*,FILE*);
@@ -62,6 +64,7 @@ int SaveBin(char*,FILE*);
 int SaveRaw(FILE*);
 int LoadBin(char*,FILE*);
 int LoadRaw(FILE*);
+char *hash(char*); /*funkcja skrótu dla przechowywania hasła do pliku*/
 ```
 #####Interfejs użytkownika
 Interfejs użytkownika oparty jest o funkcję 
