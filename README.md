@@ -218,3 +218,15 @@ int main(){
 }
 ```
 ###Struktura plików z danymi 
+```C
+#Plik z danymim do programu WSPOMAGANIE ORGANIZACJI KONFERENCJI
+#komentarze rozpoczynaja sie od #
+2 Nazwa;Typ;Id prezentera
+Ubezpieczenia;0;1;
+Obrazy;0;2;
+1 Imie;Nazwisko;Afiliacje;Rodzaj prezentacji;Status platnosci;id prezentacji...
+Jan;Kowalski;Instytut Psychologii;0;1;1;
+Zofia;Nowak;Wydzial Prawa;1;0;2;
+3 Nazwa;Typ;Lista elementow ...
+KatalogNowy;0;1;2;
+111
