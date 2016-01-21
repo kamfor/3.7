@@ -273,7 +273,7 @@ void PrintSortedPresenterTable(int sortorder){
 	if(sortorder==5)qsort(tab,i,sizeof(int),ComparePresenterPayment);
 	if(sortorder==6)qsort(tab,i,sizeof(int),ComparePresenterPresentations);
 
-	printf("id   |             Imie|          Nazwisko|              Afiliacja|      Typ|      Platnosc|         Prezentacje|\n");
+	printf("id   |          Imie|          Nazwisko|           Afiliacja|      Typ|      Platnosc|       Prezentacje|\n");
 	for(i=0;i<j;i++)PrintPresenterLine(tabPr[tab[i]],stdout);
 	free(tab);
 }
@@ -327,7 +327,7 @@ void PrintSortedPresentationTable(int sortorder){
 	if(sortorder==1)qsort(tab,j,sizeof(int),ComparePresentationName);
 	if(sortorder==2)qsort(tab,j,sizeof(int),ComparePresentationType);
 
-    printf("|id  |           Nazwa|          Typ|Prez.|\n");
+    printf("|id   |                         Nazwa|   Typ|Prez.|\n");
 	for(i=0; i<j; i++)PrintPresentationLine(tabPn[tab[i]],stdout);
 	free(tab);
 }
